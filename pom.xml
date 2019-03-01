@@ -94,6 +94,13 @@
 			<uniqueVersion>false</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
+	<repositories>
+		<repository>
+			<id>confluent</id>
+			<name>Confluent</name>
+			<url>https://packages.confluent.io/maven/</url>
+		</repository>
+	</repositories>
 	<build>
 		<plugins>
 			<plugin>
@@ -120,8 +127,8 @@
 	</build>
 
 	<modules>
-		<module>template-commands</module>
-		<module>template-view</module>
-		<module>template-lib</module>
+		<module>time-series-commands</module>
+		<module>time-series-view</module>
+		<module>time-series-lib</module>
 	</modules>
 </project>
