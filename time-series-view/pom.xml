@@ -13,6 +13,13 @@
 	<packaging>jar</packaging>
 	<name>Time series view</name>
 	<description>Time series view microservice</description>
+	
+	<properties>
+		<redmic.elasticsearch-lib.version>0.8.0</redmic.elasticsearch-lib.version>
+		
+		<!-- OTROS -->
+		<elasticsearch.version>6.5.1</elasticsearch.version>
+	</properties>
 
 	<dependencies>
 
@@ -42,6 +49,18 @@
 			<groupId>es.redmic.lib</groupId>
 			<artifactId>view-lib</artifactId>
 			<version>${redmic.view-lib.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>es.redmic.time-series</groupId>
+			<artifactId>time-series-lib</artifactId>
+			<version>${redmic.time-series-lib.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>es.redmic.lib</groupId>
+			<artifactId>elasticsearch-lib</artifactId>
+			<version>${redmic.elasticsearch-lib.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

@@ -31,6 +31,8 @@
 		<!-- Añadir versión de la librería del tipo de vista elegida (elasticsearch/postgresql) -->
 		<redmic.view-lib.version>0.8.0</redmic.view-lib.version>
 
+		<redmic.time-series-lib.version>0.1.0</redmic.time-series-lib.version>
+
 		<!-- Versions of the OTHERS library used in the children -->
 
 		<!-- Plugins -->
