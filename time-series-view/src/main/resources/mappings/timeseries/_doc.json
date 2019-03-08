@@ -1,0 +1,106 @@
+{
+	"index_patterns": [
+		"timeseries*"
+	],
+	"settings": {
+		"index": {
+			"analysis": {
+				"filter": {
+					"nGram_filter": {
+						"type": "nGram",
+						"min_gram": "2",
+						"max_gram": "20"
+					}
+				},
+				"analyzer": {
+					"autocomplete": {
+						"filter": [
+							"lowercase",
+							"asciifolding",
+							"nGram_filter"
+						],
+						"type": "custom",
+						"tokenizer": "whitespace"
+					},
+					"lower_analyzer": {
+						"filter": [
+							"lowercase",
+							"asciifolding"
+						],
+						"type": "custom",
+						"tokenizer": "standard"
+					},
+					"path-analyzer": {
+						"type": "custom",
+						"tokenizer": "path-tokenizer"
+					},
+					"split-path-analyzer": {
+						"type": "custom",
+						"tokenizer": "split-path-tokenizer"
+					}
+				},
+				"tokenizer": {
+					"split-path-tokenizer": {
+						"type": "pattern",
+						"delimiter": "\\."
+					},
+					"path-tokenizer": {
+						"type": "path_hierarchy",
+						"delimiter": "."
+					}
+				}
+			}
+		}
+	},
+	"mappings": {
+		"_doc": {
+			"properties": {
+				"id": {
+					"type": "keyword"
+				},
+				"activityId": {
+					"type": "keyword"
+				},
+				"date": {
+					"type": "date"
+				},
+				"featuresRelations": {
+					"type": "keyword"
+				},
+				"sampleId": {
+					"type": "keyword"
+				},
+				"dataDefinition": {
+					"type": "keyword"
+				},
+				"z": {
+					"type": "half_float"
+				},
+				"deviation": {
+					"type": "half_float"
+				},
+				"value": {
+					"type": "float"
+				},
+				"remark": {
+					"type": "text"
+				},
+				"qFlag": {
+					"type": "keyword"
+				},
+				"vFlag": {
+					"type": "keyword"
+				},
+				"updated": {
+					"type": "date"
+				},
+				"inserted": {
+					"type": "date"
+				}
+			}
+		}
+	},
+	"aliases": {
+		"timeseries": {}
+	}
+}
