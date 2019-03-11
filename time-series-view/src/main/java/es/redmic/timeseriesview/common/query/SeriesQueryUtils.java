@@ -35,6 +35,8 @@ public abstract class SeriesQueryUtils extends DataQueryUtils {
 
 		BoolQueryBuilder query = getOrInitializeBaseQuery(getBaseQuery(queryDTO, internalQuery, partialQuery));
 
+		addMustTermIfExist(query, getActivityIdQuery(queryDTO.getActivityId()));
+
 		addMustTermIfExist(query, getFlagQuery(queryDTO.getQFlags(), QFLAG_PROPERTY));
 		addMustTermIfExist(query, getFlagQuery(queryDTO.getVFlags(), VFLAG_PROPERTY));
 		addMustTermIfExist(query, getDateLimitsQuery(queryDTO.getDateLimits(), DATETIME_FIELD));

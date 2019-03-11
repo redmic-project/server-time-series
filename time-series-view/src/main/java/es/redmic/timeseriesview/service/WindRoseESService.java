@@ -34,7 +34,8 @@ public class WindRoseESService {
 	@SuppressWarnings({ "unchecked" })
 	public ElasticSearchDTO getWindRoseData(DataQueryDTO query, String activityId) {
 
-		// TODO: comprobar que la actividad corresponde con la buscada
+		// Añade a query para comprobar que la actividad corresponde con la buscada
+		query.setActivityId(activityId);
 
 		// Se obliga a que los datos sean buenos
 		if (query.getQFlags() != null)
