@@ -88,7 +88,8 @@ public class WindRoseESRepository extends RTimeSeriesESRepository<TimeSeries, Da
 			throw new InternalException(ExceptionType.INTERNAL_EXCEPTION);
 		}
 
-		return mapper.getMapperFacade().convert(responseSectors.getAggregations(), DatesByDirectionListDTO.class, null);
+		return mapper.getMapperFacade().convert(responseSectors.getAggregations(), DatesByDirectionListDTO.class, null,
+				null);
 	}
 
 	@SuppressWarnings({ "serial" })
@@ -132,7 +133,7 @@ public class WindRoseESRepository extends RTimeSeriesESRepository<TimeSeries, Da
 		// para cada respuesta obtenemos los resultados de la agregación
 		for (int i = 0; i < results.size(); i++) {
 			WindroseSectorDTO dataSector = mapper.getMapperFacade().convert(results.get(i).getAggregations(),
-					WindroseSectorDTO.class, null);
+					WindroseSectorDTO.class, null, null);
 			dataSector.calculateValue(count);
 			windroseDataDTO.addSectorData(dataSector);
 		}

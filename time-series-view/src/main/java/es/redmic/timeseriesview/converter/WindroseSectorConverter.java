@@ -10,6 +10,7 @@ import es.redmic.models.es.geojson.common.model.Aggregations;
 import es.redmic.timeseriesview.dto.windrose.WindroseItemDTO;
 import es.redmic.timeseriesview.dto.windrose.WindroseSectorDTO;
 import ma.glasnost.orika.CustomConverter;
+import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.metadata.Type;
 
 @Component
@@ -17,7 +18,8 @@ public class WindroseSectorConverter extends CustomConverter<Aggregations, Windr
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public WindroseSectorDTO convert(Aggregations source, Type<? extends WindroseSectorDTO> destinationType) {
+	public WindroseSectorDTO convert(Aggregations source, Type<? extends WindroseSectorDTO> destinationType,
+			MappingContext mappingContext) {
 
 		WindroseSectorDTO result = new WindroseSectorDTO();
 

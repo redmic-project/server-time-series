@@ -10,6 +10,7 @@ import es.redmic.models.es.geojson.common.model.Aggregations;
 import es.redmic.timeseriesview.dto.windrose.DatesByDirectionDTO;
 import es.redmic.timeseriesview.dto.windrose.DatesByDirectionListDTO;
 import ma.glasnost.orika.CustomConverter;
+import ma.glasnost.orika.MappingContext;
 import ma.glasnost.orika.metadata.Type;
 
 /**
@@ -22,8 +23,8 @@ public class DirectionDatesConverter extends CustomConverter<Aggregations, Dates
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public DatesByDirectionListDTO convert(Aggregations source,
-			Type<? extends DatesByDirectionListDTO> destinationType) {
+	public DatesByDirectionListDTO convert(Aggregations source, Type<? extends DatesByDirectionListDTO> destinationType,
+			MappingContext mappingContext) {
 
 		DatesByDirectionListDTO result = new DatesByDirectionListDTO();
 
