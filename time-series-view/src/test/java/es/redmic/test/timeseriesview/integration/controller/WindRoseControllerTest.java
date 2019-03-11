@@ -14,6 +14,7 @@ import java.util.Map;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,6 @@ import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -56,7 +55,9 @@ public class WindRoseControllerTest {
 	@Autowired
 	ObjectMapper mapper;
 
-	String windRoseSeries = "/data/windrose/windRoseSeries.json", activityId = "1286";
+	private String windRoseSeries = "/data/windrose/windRoseData.json";
+
+	private String activityId = "1286";
 
 	@Value("${controller.mapping.TIMESERIES}")
 	private String TIMESERIES_PATH;
@@ -67,8 +68,44 @@ public class WindRoseControllerTest {
 	@Autowired
 	TimeSeriesESRepository repository;
 
+	private static DataQueryDTO dataQuery;
+
+	private static HashMap<String, Object> query;
+
+	@BeforeClass
+	public static void beforeClass() {
+
+		// Se forma la query
+		dataQuery = new DataQueryDTO();
+
+		DateLimitsDTO dateLimits = new DateLimitsDTO();
+		dateLimits.setStartDate(new DateTime(2019, 1, 1, 0, 0, 0, 0, DateTimeZone.UTC));
+		dateLimits.setEndDate(new DateTime(2019, 2, 1, 0, 0, 0, 0, DateTimeZone.UTC));
+		dataQuery.setDateLimits(dateLimits);
+
+		Map<String, Object> terms = new HashMap<String, Object>();
+
+		// @formatter:off
+
+		Integer speedDataDefinition = 20,
+				directionDataDefinition = 19;
+		
+		// @formatter:on
+
+		Map<String, Object> dataDefinition = new HashMap<>();
+		dataDefinition.put("speed", speedDataDefinition);
+		dataDefinition.put("direction", directionDataDefinition);
+		terms.put("dataDefinition", dataDefinition);
+
+		dataQuery.setTerms(terms);
+	}
+
+	@SuppressWarnings("unchecked")
 	@Before
 	public void setUp() throws JsonParseException, JsonMappingException, IOException {
+
+		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain)
+				.build();
 
 		TIMESERIES_PATH = TIMESERIES_PATH.replace("{activityId}", activityId);
 
@@ -83,63 +120,63 @@ public class WindRoseControllerTest {
 			repository.save(item);
 		}
 
-		// @formatter:off
-
-		mockMvc = MockMvcBuilders
-				.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain).build();
-
-		// @formatter:on
+		// Se elimina accessibilityIds ya que no está permitido para usuarios
+		// no registrados
+		query = mapper.convertValue(dataQuery, HashMap.class);
+		query.remove("accessibilityIds");
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
-	public void searchVesselsPost_Return200_WhenSearchIsCorrect() throws Exception {
-
-		DataQueryDTO dataQuery = new DataQueryDTO();
-
-		DateLimitsDTO dateLimits = new DateLimitsDTO();
-		dateLimits.setStartDate(new DateTime(2019, 1, 1, 0, 0, 0, 0, DateTimeZone.UTC));
-		dateLimits.setEndDate(new DateTime(2019, 1, 2, 0, 0, 0, 0, DateTimeZone.UTC));
-		dataQuery.setDateLimits(dateLimits);
-
-		Map<String, Object> terms = new HashMap<String, Object>();
+	public void windRose16Sectors6Splits_Return200_WhenSearchIsCorrect() throws Exception {
 
 		// @formatter:off
-
-		Integer speedDataDefinition = 20,
-				directionDataDefinition = 19,
-				numSectors = 16,
+		
+		Integer numSectors = 16,
 				numSplits = 6;
 		
-		// @formatter:on
-
-		Map<String, Object> dataDefinition = new HashMap<>();
-		dataDefinition.put("speed", speedDataDefinition);
-		dataDefinition.put("direction", directionDataDefinition);
-		terms.put("dataDefinition", dataDefinition);
-
-		terms.put("numSectors", numSectors);
-		terms.put("numSplits", numSplits);
-
-		dataQuery.setTerms(terms);
-
-		// Se elimina accessibilityIds ya que no está permitido para usuarios
-		// no registrados
-		HashMap<String, Object> query = mapper.convertValue(dataQuery, HashMap.class);
-		query.remove("accessibilityIds");
-
-		// @formatter:off
+		String windRoseResult = "/data/windrose/windRoseResult16Sectors6Splits.json";
 		
-		ResultActions result = this.mockMvc
+		
+		((Map<String, Object>) query.get("terms")).put("numSectors", numSectors);
+		((Map<String, Object>) query.get("terms")).put("numSplits", numSplits);
+		
+		this.mockMvc
 				.perform(post(TIMESERIES_PATH + WINDROSE_PATH + "/_search").content(mapper.writeValueAsString(query))
 					.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.success", is(true)))
 				.andExpect(jsonPath("$.body.data", notNullValue()))
 				.andExpect(jsonPath("$.body.limits.length()", is(numSplits)))
-				.andExpect(jsonPath("$.body.data.length()", is(numSectors)));
+				.andExpect(jsonPath("$.body.data.length()", is(numSectors)))
+				.andExpect(jsonPath("$.body", is(mapper.readValue(getClass().getResource(windRoseResult).openStream(), Map.class))));
+
+		// @formatter:on
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void windRose36Sectors10Splits_Return200_WhenSearchIsCorrect() throws Exception {
+
+		// @formatter:off
 		
-		result.andDo(MockMvcResultHandlers.print());
+		Integer numSectors = 36,
+				numSplits = 10;
+		
+		String windRoseResult = "/data/windrose/windRoseResult36Sectors10Splits.json";
+		
+		((Map<String, Object>) query.get("terms")).put("numSectors", numSectors);
+		((Map<String, Object>) query.get("terms")).put("numSplits", numSplits);
+		
+		this.mockMvc
+				.perform(post(TIMESERIES_PATH + WINDROSE_PATH + "/_search").content(mapper.writeValueAsString(query))
+					.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.success", is(true)))
+				.andExpect(jsonPath("$.body.data", notNullValue()))
+				.andExpect(jsonPath("$.body.limits.length()", is(numSplits)))
+				.andExpect(jsonPath("$.body.data.length()", is(numSectors)))
+				.andExpect(jsonPath("$.body", is(mapper.readValue(getClass().getResource(windRoseResult).openStream(), Map.class))));
 		
 		// @formatter:on
 	}
