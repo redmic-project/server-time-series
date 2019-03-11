@@ -62,6 +62,15 @@
 			<artifactId>elasticsearch-lib</artifactId>
 			<version>${redmic.elasticsearch-lib.version}</version>
 		</dependency>
+		
+		<!-- tests -->
+
+		<dependency>
+			<groupId>es.redmic.lib</groupId>
+			<artifactId>test-utils</artifactId>
+			<version>${redmic.test-utils.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
