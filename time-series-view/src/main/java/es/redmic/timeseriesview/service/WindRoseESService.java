@@ -17,7 +17,7 @@ import es.redmic.viewlib.config.MapperScanBeanItfc;
 @Service
 public class WindRoseESService {
 
-	private final static Integer PARTITION_NUMBER_LIMIT = 20;
+	private final static Integer PARTITION_NUMBER_LIMIT = 10;
 
 	private WindRoseESRepository repository;
 
@@ -71,7 +71,7 @@ public class WindRoseESService {
 		// Comprueba que numSectors sea un número válido. An = 2^(n-1)
 
 		double x = (Math.log(numSectors) / Math.log(2));
-		if (numSectors < 2 || x > 5 || (x != (int) x))
+		if ((numSectors < 2 || x > 5 || (x != (int) x)) && numSectors != 36)
 			throw new ESTermQueryException("numSectors", numSectors.toString());
 	}
 
