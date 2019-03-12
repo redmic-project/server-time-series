@@ -54,6 +54,7 @@
 	},
 	"mappings": {
 		"_doc": {
+			"dynamic": "false",
 			"properties": {
 				"id": {
 					"type": "keyword"
