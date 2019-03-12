@@ -2,7 +2,15 @@ version: '3.5'
 
 services:
   time-series-view:
+    environment:
+      - JAVA_OPTS=-Xmx768m -Xms256m
     deploy:
       placement:
         constraints:
           - node.role == worker
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          memory: 820M

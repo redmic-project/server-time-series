@@ -10,7 +10,6 @@ services:
       - OAUTH_CLIENT_SECRET
       - MICROSERVICE_NAME=${UNIT_NAME}-commands
       - SPRING_KAFKA_CLIENT-ID={{.Service.Name}}-{{.Task.Slot}}
-      - JAVA_OPTS=-Xmx1848m -Xms256m
     networks:
       - metric-net
       - kafka-net
@@ -34,12 +33,6 @@ services:
       restart_policy:
         delay: 1m
         window: 3m
-      resources:
-        limits:
-          cpus: '2'
-          memory: 2G
-        reservations:
-          memory: 1639M
 
 networks:
   metric-net:

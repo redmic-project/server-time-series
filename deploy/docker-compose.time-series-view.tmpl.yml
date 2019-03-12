@@ -13,7 +13,6 @@ services:
       - ELASTIC_PASSWORD
       - MICROSERVICE_NAME=${UNIT_NAME}-view
       - SPRING_KAFKA_CLIENT-ID={{.Service.Name}}-{{.Task.Slot}}
-      - JAVA_OPTS=-Xmx568m -Xms256m
     networks:
       - elastic-net
       - metric-net
@@ -36,12 +35,6 @@ services:
       restart_policy:
         delay: 1m
         window: 3m
-      resources:
-        limits:
-          cpus: '1'
-          memory: 768M
-        reservations:
-          memory: 615M
 
 networks:
   elastic-net:
