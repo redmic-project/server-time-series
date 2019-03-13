@@ -180,4 +180,27 @@ public class WindRoseControllerTest {
 		
 		// @formatter:on
 	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void windRose_Return204_WhenNoDataFound() throws Exception {
+
+		// @formatter:off
+		
+		Integer numSectors = 16,
+				numSplits = 6;
+		
+		((Map<String, Object>) query.get("terms")).put("numSectors", numSectors);
+		((Map<String, Object>) query.get("terms")).put("numSplits", numSplits);
+		
+		((Map<String, Object>) query.get("dateLimits")).put("startDate", new DateTime(2018, 1, 1, 0, 0, 0, 0, DateTimeZone.UTC));
+		((Map<String, Object>) query.get("dateLimits")).put("endDate", new DateTime(2018, 2, 1, 0, 0, 0, 0, DateTimeZone.UTC));
+		
+		this.mockMvc
+				.perform(post(TIMESERIES_PATH + WINDROSE_PATH + "/_search").content(mapper.writeValueAsString(query))
+					.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().is(204));
+
+		// @formatter:on
+	}
 }
