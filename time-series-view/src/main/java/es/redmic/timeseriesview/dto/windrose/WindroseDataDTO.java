@@ -3,8 +3,6 @@ package es.redmic.timeseriesview.dto.windrose;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.redmic.exception.elasticsearch.ESTermQueryException;
-
 public class WindroseDataDTO extends RangesOfSplitsDTO {
 
 	private List<WindroseSectorDTO> data = new ArrayList<WindroseSectorDTO>();
@@ -35,12 +33,9 @@ public class WindroseDataDTO extends RangesOfSplitsDTO {
 
 	private void setLimits(Double min, Double max, Integer partitionNumber) {
 
-		if (min == null || max == null || (min > max) || min == max || partitionNumber == null || partitionNumber == 0)
-			throw new ESTermQueryException("partitionNumber", partitionNumber.toString());
+		List<LimitsDTO> limits = new ArrayList<LimitsDTO>();
 
 		double partitionLength = (max - min) / partitionNumber;
-
-		List<LimitsDTO> limits = new ArrayList<LimitsDTO>();
 
 		double limit = min;
 		for (int i = 0; i < partitionNumber; i++) {

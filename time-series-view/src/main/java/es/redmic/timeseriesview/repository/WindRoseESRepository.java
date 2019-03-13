@@ -20,6 +20,7 @@ import org.springframework.stereotype.Repository;
 import es.redmic.elasticsearchlib.timeseries.repository.RTimeSeriesESRepository;
 import es.redmic.exception.common.ExceptionType;
 import es.redmic.exception.common.InternalException;
+import es.redmic.exception.common.NoContentException;
 import es.redmic.models.es.common.query.dto.AggsPropertiesDTO;
 import es.redmic.models.es.common.query.dto.DataQueryDTO;
 import es.redmic.models.es.data.common.model.DataSearchWrapper;
@@ -56,12 +57,23 @@ public class WindRoseESRepository extends RTimeSeriesESRepository<TimeSeries, Da
 
 		DataSearchWrapper<TimeSeries> responseStats = (DataSearchWrapper<TimeSeries>) find(query);
 
-		if (responseStats.getAggregations() == null || responseStats.getAggregations().getAttributes() == null) {
-			LOGGER.debug("No es posible realizar los cálculos");
-			throw new InternalException(ExceptionType.INTERNAL_EXCEPTION);
+		if (noContent(responseStats)) {
+			LOGGER.error("No es posible realizar los cálculos. No se ha obtenido resultados");
+			throw new NoContentException();
 		}
 
-		return (Map<String, Object>) responseStats.getAggregations().getAttributes().get("stats#value");
+		return getAttributeFromAggregations(responseStats, "stats#value");
+	}
+
+	private boolean noContent(DataSearchWrapper<TimeSeries> response) {
+
+		boolean nullResult = response.getAggregations() == null || response.getAggregations().getAttributes() == null;
+		return (nullResult || getAttributeFromAggregations(response, "stats#value").get("count").equals(0));
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	private Map<String, Object> getAttributeFromAggregations(DataSearchWrapper<TimeSeries> response, String attribute) {
+		return (Map<String, Object>) response.getAggregations().getAttributes().get(attribute);
 	}
 
 	@SuppressWarnings({ "serial", "unchecked" })
