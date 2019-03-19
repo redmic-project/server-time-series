@@ -1,17 +1,21 @@
 package es.redmic.timeseriesview.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.redmic.exception.elasticsearch.ESTermQueryException;
 import es.redmic.models.es.common.dto.ElasticSearchDTO;
+import es.redmic.models.es.common.query.dto.AggsPropertiesDTO;
 import es.redmic.models.es.common.query.dto.DataQueryDTO;
-import es.redmic.timeseriesview.dto.windrose.DatesByDirectionListDTO;
-import es.redmic.timeseriesview.dto.windrose.WindroseDataDTO;
+import es.redmic.timeseriesview.dto.windrose.WindRoseDataDTO;
 import es.redmic.timeseriesview.repository.WindRoseESRepository;
+import es.redmic.timeseriesview.utils.TimeSeriesUtils;
 import es.redmic.viewlib.config.MapperScanBeanItfc;
 
 @Service
@@ -31,8 +35,23 @@ public class WindRoseESService {
 		this.repository = repository;
 	}
 
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({ "unchecked", "serial" })
 	public ElasticSearchDTO getWindRoseData(DataQueryDTO query, String activityId) {
+
+		// Obtiene datos de la query
+
+		Map<String, Object> dataDefinitionMap = (Map<String, Object>) query.getTerms().get("dataDefinition");
+
+		Integer numSectors = (Integer) query.getTerms().get("numSectors"),
+				partitionNumber = (Integer) query.getTerms().get("numSplits");
+
+		List<Integer> speedDataDefinition = (List<Integer>) dataDefinitionMap.get("speed"),
+				directionDataDefinition = (List<Integer>) dataDefinitionMap.get("direction");
+
+		Long timeIntervalDefault = new Long(query.getTerms().get("timeInterval").toString());
+
+		checkValidNumSectors(numSectors);
+		checkValidPartitionNumber(partitionNumber);
 
 		// Añade a query para comprobar que la actividad corresponde con la buscada
 		query.setActivityId(activityId);
@@ -43,27 +62,21 @@ public class WindRoseESService {
 
 		query.setQFlags(Arrays.asList(GOOD_QFLAG));
 
-		// Obtiene datos de la query
+		query.setSize(0);
 
-		Map<String, Object> dataDefinitionMap = (Map<String, Object>) query.getTerms().get("dataDefinition");
+		query.getTerms().put("dataDefinition", new ArrayList<Integer>() {
+			{
+				addAll(speedDataDefinition);
+				addAll(directionDataDefinition);
+			}
+		});
 
-		Integer numSectors = (Integer) query.getTerms().get("numSectors"),
-				partitionNumber = (Integer) query.getTerms().get("numSplits"),
-				speedDataDefinition = (Integer) dataDefinitionMap.get("speed"),
-				directionDataDefinition = (Integer) dataDefinitionMap.get("direction");
+		query.addAgg(new AggsPropertiesDTO("dataDefinition", StringUtils.join(speedDataDefinition, ",")));
+		query.addAgg(new AggsPropertiesDTO("dataDefinition", StringUtils.join(directionDataDefinition, ",")));
+		query.addAgg(new AggsPropertiesDTO("interval",
+				TimeSeriesUtils.getTimeInterval(timeIntervalDefault, query.getDateLimits()).toString()));
 
-		checkValidNumSectors(numSectors);
-		checkValidPartitionNumber(partitionNumber);
-
-		Map<String, Object> stats = repository.getStatAggs(query, speedDataDefinition);
-
-		// Obtener las fechas de los registros de cada uno de los sectores.
-		DatesByDirectionListDTO datesByDirectionListDTO = repository.getDatesByDirectionAggs(query, numSectors,
-				directionDataDefinition);
-
-		// Hacer query para obtener los datos en formato windrose
-		WindroseDataDTO windroseDataDTO = repository.getWindroseData(query, datesByDirectionListDTO,
-				speedDataDefinition, stats, partitionNumber);
+		WindRoseDataDTO windroseDataDTO = repository.getWindRoseData(query, numSectors, partitionNumber);
 
 		return new ElasticSearchDTO(windroseDataDTO, windroseDataDTO.getData().size());
 	}
