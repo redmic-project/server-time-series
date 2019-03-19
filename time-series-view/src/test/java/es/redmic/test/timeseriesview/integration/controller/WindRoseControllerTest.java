@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,7 @@ public class WindRoseControllerTest {
 
 	private static HashMap<String, Object> query;
 
+	@SuppressWarnings("serial")
 	@BeforeClass
 	public static void beforeClass() {
 
@@ -87,8 +89,14 @@ public class WindRoseControllerTest {
 
 		// @formatter:off
 
-		Integer speedDataDefinition = 20,
-				directionDataDefinition = 19;
+		List<Integer> speedDataDefinition = new ArrayList<Integer>() {{
+			add(20);
+			add(21);
+		}},
+		directionDataDefinition = new ArrayList<Integer>() {{
+			add(18);
+			add(19);
+		}};
 		
 		// @formatter:on
 
@@ -96,6 +104,8 @@ public class WindRoseControllerTest {
 		dataDefinition.put("speed", speedDataDefinition);
 		dataDefinition.put("direction", directionDataDefinition);
 		terms.put("dataDefinition", dataDefinition);
+
+		terms.put("timeInterval", 3600000);
 
 		dataQuery.setTerms(terms);
 	}
