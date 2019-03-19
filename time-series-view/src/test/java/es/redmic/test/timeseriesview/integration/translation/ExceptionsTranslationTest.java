@@ -1,4 +1,4 @@
-package es.redmic.test.timeseriesview.integration.controller.translation;
+package es.redmic.test.timeseriesview.integration.translation;
 
 import java.text.MessageFormat;
 import java.util.Locale;
