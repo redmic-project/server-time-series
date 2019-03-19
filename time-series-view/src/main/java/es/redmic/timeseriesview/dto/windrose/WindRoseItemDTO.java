@@ -4,10 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import es.redmic.models.es.utils.DecimalUtils;
 
-public class WindroseItemDTO {
+public class WindRoseItemDTO {
 
-	public WindroseItemDTO(Integer count) {
-		setCount(count);
+	private Integer total;
+
+	public WindRoseItemDTO(Integer total) {
+		this.total = total;
+		this.count = 0;
 	}
 
 	private Double value;
@@ -31,7 +34,11 @@ public class WindroseItemDTO {
 		this.count = count;
 	}
 
-	public void calculateValue(Integer total) {
+	public void addCount() {
+		this.count++;
+	}
+
+	public void calculate() {
 		double aux = (double) count / total;
 		setValue(aux * 100);
 	}
