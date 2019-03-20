@@ -4,6 +4,10 @@ services:
   time-series-view:
     environment:
       - JAVA_OPTS=-Xmx768m -Xms256m
+    ports:
+      - target: ${VIEW_PORT}
+        published: ${VIEW_PORT}
+        mode: host
     deploy:
       resources:
         limits:
