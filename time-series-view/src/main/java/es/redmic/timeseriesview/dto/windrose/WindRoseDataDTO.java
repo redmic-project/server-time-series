@@ -3,9 +3,13 @@ package es.redmic.timeseriesview.dto.windrose;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.redmic.timeseriesview.dto.timeseries.StatsDTO;
+
 public class WindRoseDataDTO extends RangesOfSplitsDTO {
 
 	private List<WindRoseSectorDTO> data = new ArrayList<WindRoseSectorDTO>();
+
+	private StatsDTO stats;
 
 	private Integer numSectors;
 
@@ -36,6 +40,14 @@ public class WindRoseDataDTO extends RangesOfSplitsDTO {
 
 	public void setData(List<WindRoseSectorDTO> data) {
 		this.data = data;
+	}
+
+	public StatsDTO getStats() {
+		return stats;
+	}
+
+	public void setStats(StatsDTO stats) {
+		this.stats = stats;
 	}
 
 	public void addSectorData(WindRoseSectorDTO sectorData) {

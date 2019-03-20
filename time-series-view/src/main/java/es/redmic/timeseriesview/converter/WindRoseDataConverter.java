@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import es.redmic.elasticsearchlib.common.utils.ElasticSearchUtils;
 import es.redmic.exception.common.NoContentException;
 import es.redmic.models.es.geojson.common.model.Aggregations;
+import es.redmic.timeseriesview.dto.timeseries.StatsDTO;
 import es.redmic.timeseriesview.dto.windrose.LimitsDTO;
 import es.redmic.timeseriesview.dto.windrose.WindRoseDataDTO;
 import ma.glasnost.orika.CustomConverter;
@@ -36,9 +37,9 @@ public class WindRoseDataConverter extends CustomConverter<Aggregations, WindRos
 		
 		partitionNumber = (Integer) mappingContext.getProperty("partitionNumber");
 
-		Map<String, Object> stats = ElasticSearchUtils.getMapValue(
+		StatsDTO stats = (StatsDTO) ElasticSearchUtils.getStatsFromAggregation(
 				ElasticSearchUtils.getMapValue(source.getAttributes(), "filter#dataDefinitionFilter"),
-					"stats#speed_stats");
+					"stats#speed_stats", StatsDTO.class);
 		
 		List<Map<String, Object>> values = (List<Map<String, Object>>) 
 				(ElasticSearchUtils.getMapValue(source.getAttributes(), "date_histogram#avg_values_by_interval"))
@@ -55,10 +56,13 @@ public class WindRoseDataConverter extends CustomConverter<Aggregations, WindRos
 		
 		// @formatter:on
 
-		Double max = (Double) stats.get("max");
+		Double max = stats.getMax();
 
 		// Eliminar max
 		WindRoseDataDTO windRoseDataDTO = new WindRoseDataDTO(values.size(), max, partitionNumber, numSectors);
+
+		// Se guardan las estadísticas
+		windRoseDataDTO.setStats(stats);
 
 		List<LimitsDTO> limits = windRoseDataDTO.getLimits();
 
