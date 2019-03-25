@@ -5,23 +5,34 @@ stages:
   - test-package
   - deploy
 
+variables:
+  DOCKER_DRIVER: overlay2
+  STACK: time-series
+  IMAGE_NAME: ${CI_REGISTRY_IMAGE}
+  IMAGE_TAG: ${CI_COMMIT_SHA}
+  MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
+
+services:
+  - docker:dind
+
 maven-build-lib:
   stage: build-lib
-  image: registry.gitlab.com/redmic-project/docker/maven
+  image: registry.gitlab.com/redmic-project/docker/maven:${MAVEN_IMAGE_TAG}
   variables:
-    MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
     SPRING_PROFILES_ACTIVE: test
+    LOGGING_LEVEL_ROOT: error
+    LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: error
   only:
     - branches
   cache:
     paths:
       - .m2/repository/
   script:
-    - mvn -pl :${CI_PROJECT_NAME}-lib deploy -B
+    - mvn -pl :${CI_PROJECT_NAME}-lib -U clean deploy -B
     - "COVERAGE=$(xmllint --html --xpath '//table[@id=\"coveragetable\"]/tfoot//td[@class=\"ctr2\"][1]/text()' ${CI_PROJECT_NAME}-lib/target/site/jacoco/index.html)"
     - 'echo "Coverage: ${COVERAGE}"'
   after_script:
-    - rm -r .m2/repository/es
+    - rm -rf .m2/repository/es
   artifacts:
     name: "${CI_PROJECT_NAME}-lib-${CI_COMMIT_REF_NAME}"
     expire_in: '6 months'
@@ -30,21 +41,26 @@ maven-build-lib:
 
 maven-build-commands:
   stage: build-services
-  image: registry.gitlab.com/redmic-project/docker/maven
+  image: registry.gitlab.com/redmic-project/docker/maven:${MAVEN_IMAGE_TAG}
   variables:
-    MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
     SPRING_PROFILES_ACTIVE: test
+    LOGGING_LEVEL_ROOT: "off"
+    LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: error
+    LOGGING_LEVEL_ES_REDMIC: error
+    OAUTH_CLIENT_ID: ${DEV_OAUTH_CLIENT_ID}
+    OAUTH_CLIENT_SECRET: ${DEV_OAUTH_CLIENT_SECRET}
+    TEST_USER_PASSWORD: ${TEST_USER_PASSWORD}
   only:
     - branches
   cache:
     paths:
       - .m2/repository/
   script:
-    - mvn -pl :${CI_PROJECT_NAME}-commands verify spring-boot:repackage -B
+    - mvn -pl :${CI_PROJECT_NAME}-commands -U clean verify spring-boot:repackage -B
     - "COVERAGE=$(xmllint --html --xpath '//table[@id=\"coveragetable\"]/tfoot//td[@class=\"ctr2\"][1]/text()' ${CI_PROJECT_NAME}-commands/target/site/jacoco/index.html)"
     - 'echo "Coverage: ${COVERAGE}"'
   after_script:
-    - rm -r .m2/repository/es
+    - rm -rf .m2/repository/es
   artifacts:
     name: "${CI_PROJECT_NAME}-commands-${CI_COMMIT_REF_NAME}"
     expire_in: '6 months'
@@ -54,33 +70,42 @@ maven-build-commands:
 
 maven-build-view:
   stage: build-services
-  image: registry.gitlab.com/redmic-project/docker/maven
+  image: registry.gitlab.com/redmic-project/docker/maven:${MAVEN_IMAGE_TAG}
   variables:
-    MAVEN_OPTS: -Dmaven.repo.local=.m2/repository
+    GIT_SUBMODULE_STRATEGY: normal
     SPRING_PROFILES_ACTIVE: test
+    LOGGING_LEVEL_ROOT: error
+    LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: error
+    OAUTH_CLIENT_ID: ${DEV_OAUTH_CLIENT_ID}
+    OAUTH_CLIENT_SECRET: ${DEV_OAUTH_CLIENT_SECRET}
+    TEST_USER_PASSWORD: ${TEST_USER_PASSWORD}
+    ELASTIC_CLUSTERNAME: ${DEV_ELASTIC_CLUSTERNAME}
   only:
     - branches
   cache:
     paths:
       - .m2/repository/
   script:
-    - mvn -pl :${CI_PROJECT_NAME}-view verify spring-boot:repackage -B
+    - mvn -f elasticsearch-cluster-runner compile
+    - mvn -f elasticsearch-cluster-runner exec:java -Dexec.args="-numOfNode 1 -clusterName ${ELASTIC_CLUSTERNAME}" > elasticsearch-cluster-runner-out.txt &
+    - mvn -pl :${CI_PROJECT_NAME}-view -U clean verify spring-boot:repackage -B
     - "COVERAGE=$(xmllint --html --xpath '//table[@id=\"coveragetable\"]/tfoot//td[@class=\"ctr2\"][1]/text()' ${CI_PROJECT_NAME}-view/target/site/jacoco/index.html)"
     - 'echo "Coverage: ${COVERAGE}"'
   after_script:
-    - rm -r .m2/repository/es
+    - rm -rf .m2/repository/es
   artifacts:
     name: "${CI_PROJECT_NAME}-view-${CI_COMMIT_REF_NAME}"
     expire_in: '6 months'
     paths:
       - "${CI_PROJECT_NAME}-view/dist/*.jar"
       - "${CI_PROJECT_NAME}-view/target/generated-docs"
+      - "elasticsearch-cluster-runner-out.txt"
+    when: always
 
 docker-build-commit-non-master-branches:
   stage: package
   image: docker:stable
   variables:
-    DOCKER_DRIVER: overlay2
     PARENT_IMAGE_NAME: registry.gitlab.com/redmic-project/docker/redmic-server
     PARENT_IMAGE_TAG: latest
   services:
@@ -100,7 +125,6 @@ docker-build-commit-master-branch:
   stage: package
   image: docker:stable
   variables:
-    DOCKER_DRIVER: overlay2
     PARENT_IMAGE_NAME: registry.gitlab.com/redmic-project/docker/redmic-server
     PARENT_IMAGE_TAG: latest
   services:
@@ -117,22 +141,19 @@ docker-build-commit-master-branch:
 docker-tag-already-built-image:
   stage: package
   image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
   services:
     - docker:dind
   only:
     - tags
   script:
     - docker login -u gitlab-ci-token -p ${CI_JOB_TOKEN} ${CI_REGISTRY}
+    - docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA}
     - docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_SHA} ${CI_REGISTRY_IMAGE}:${CI_COMMIT_TAG}
     - docker push ${CI_REGISTRY_IMAGE}
 
 container-scanning:
   stage: test-package
   image: docker:stable
-  variables:
-    DOCKER_DRIVER: overlay2
   allow_failure: true
   services:
     - docker:stable-dind
@@ -154,118 +175,67 @@ container-scanning:
   artifacts:
     paths: [gl-sast-container-report.json]
 
-deploy-commands-dev:
-  stage: deploy
-  image: registry.gitlab.com/redmic-project/docker/docker-deploy
-  variables:
-    DOCKER_DRIVER: overlay2
-    SSH_REMOTE: ${DEV_SSH_REMOTE}
-    SERVICE: ${CI_PROJECT_NAME}-commands
-    IMAGE_NAME: ${CI_REGISTRY_IMAGE}
-    IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}-commands.tmpl.yml:docker-compose.${CI_PROJECT_NAME}-commands.dev.yml
-  services:
-    - docker:dind
-  script:
-    - >
-      deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
-      SPRING_PROFILES_ACTIVE=pre
-  environment:
-    name: dev/${CI_PROJECT_NAME}-commands
-    url: https://appdev.${DEV_PUBLIC_HOSTNAME}/api/${CI_PROJECT_NAME}/commands
-  only:
-    - dev
-
-deploy-view-dev:
-  stage: deploy
-  image: registry.gitlab.com/redmic-project/docker/docker-deploy
-  variables:
-    DOCKER_DRIVER: overlay2
-    SSH_REMOTE: ${DEV_SSH_REMOTE}
-    SERVICE: ${CI_PROJECT_NAME}-view
-    IMAGE_NAME: ${CI_REGISTRY_IMAGE}
-    IMAGE_TAG: ${CI_COMMIT_SHA}
-    COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}-view.tmpl.yml:docker-compose.${CI_PROJECT_NAME}-view.dev.yml
-  services:
-    - docker:dind
-  script:
-    - >
-      deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
-      SPRING_PROFILES_ACTIVE=pre
-  environment:
-    name: dev/${CI_PROJECT_NAME}-view
-    url: https://appdev.${DEV_PUBLIC_HOSTNAME}/api/${CI_PROJECT_NAME}/view
-  only:
-    - dev
-
 deploy-commands-supporting-branch:
   stage: deploy
-  image: registry.gitlab.com/redmic-project/docker/docker-deploy
+  image: registry.gitlab.com/redmic-project/docker/docker-deploy:${DOCKER_DEPLOY_IMAGE_TAG}
   variables:
-    DOCKER_DRIVER: overlay2
     SSH_REMOTE: ${DEV_SSH_REMOTE}
-    SERVICE: ${CI_PROJECT_NAME}-commands
-    IMAGE_NAME: ${CI_REGISTRY_IMAGE}
-    IMAGE_TAG: ${CI_COMMIT_SHA}
+    SERVICES_TO_CHECK: ${STACK}_${CI_PROJECT_NAME}-commands
     COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}-commands.tmpl.yml:docker-compose.${CI_PROJECT_NAME}-commands.dev.yml
-  services:
-    - docker:dind
+    SPRING_PROFILES_ACTIVE: pre
+    PUBLIC_HOSTNAME: ${DEV_PUBLIC_HOSTNAME}
   script:
     - >
       deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
-      SPRING_PROFILES_ACTIVE=pre
+      SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
+      OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET} PUBLIC_HOSTNAME=${PUBLIC_HOSTNAME}
   environment:
     name: dev/${CI_PROJECT_NAME}-commands
-    url: https://appdev.${DEV_PUBLIC_HOSTNAME}/api/${CI_PROJECT_NAME}/commands
+    url: https://${DEV_PUBLIC_HOSTNAME}/api/${CI_PROJECT_NAME}/commands
   only:
     - branches
   except:
     - master
-    - dev
   when: manual
 
 deploy-view-supporting-branch:
   stage: deploy
-  image: registry.gitlab.com/redmic-project/docker/docker-deploy
+  image: registry.gitlab.com/redmic-project/docker/docker-deploy:${DOCKER_DEPLOY_IMAGE_TAG}
   variables:
-    DOCKER_DRIVER: overlay2
     SSH_REMOTE: ${DEV_SSH_REMOTE}
-    SERVICE: ${CI_PROJECT_NAME}-view
-    IMAGE_NAME: ${CI_REGISTRY_IMAGE}
-    IMAGE_TAG: ${CI_COMMIT_SHA}
+    SERVICES_TO_CHECK: ${STACK}_${CI_PROJECT_NAME}-view
     COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}-view.tmpl.yml:docker-compose.${CI_PROJECT_NAME}-view.dev.yml
-  services:
-    - docker:dind
+    SPRING_PROFILES_ACTIVE: pre
+    PUBLIC_HOSTNAME: ${DEV_PUBLIC_HOSTNAME}
   script:
     - >
       deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
-      SPRING_PROFILES_ACTIVE=pre
+      SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
+      OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET} ELASTIC_CLUSTERNAME=${ELASTIC_CLUSTERNAME}
+      ELASTIC_USER=${ELASTIC_USER} ELASTIC_PASSWORD=${ELASTIC_PASSWORD} PUBLIC_HOSTNAME=${PUBLIC_HOSTNAME}
   environment:
     name: dev/${CI_PROJECT_NAME}-view
-    url: https://appdev.${DEV_PUBLIC_HOSTNAME}/api/${CI_PROJECT_NAME}/view
+    url: https://${DEV_PUBLIC_HOSTNAME}/api/${CI_PROJECT_NAME}/view
   only:
     - branches
   except:
     - master
-    - dev
   when: manual
 
 deploy-commands-pro:
   stage: deploy
-  image: registry.gitlab.com/redmic-project/docker/docker-deploy
+  image: registry.gitlab.com/redmic-project/docker/docker-deploy:${DOCKER_DEPLOY_IMAGE_TAG}
   variables:
-    DOCKER_DRIVER: overlay2
     SSH_REMOTE: ${PRO_SSH_REMOTE}
-    SERVICE: ${CI_PROJECT_NAME}-commands
-    IMAGE_NAME: ${CI_REGISTRY_IMAGE}
-    IMAGE_TAG: ${CI_COMMIT_SHA}
+    SERVICES_TO_CHECK: ${STACK}_${CI_PROJECT_NAME}-commands
     COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}-commands.tmpl.yml:docker-compose.${CI_PROJECT_NAME}-commands.prod.yml
-  services:
-    - docker:dind
+    SPRING_PROFILES_ACTIVE: prod
+    PUBLIC_HOSTNAME: ${PRO_PUBLIC_HOSTNAME}
   script:
     - >
       deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
-      SPRING_PROFILES_ACTIVE=prod
+      SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
+      OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET} PUBLIC_HOSTNAME=${PUBLIC_HOSTNAME}
   environment:
     name: pro/${CI_PROJECT_NAME}-commands
     url: https://${PRO_PUBLIC_HOSTNAME}/api/${CI_PROJECT_NAME}/commands
@@ -275,20 +245,19 @@ deploy-commands-pro:
 
 deploy-view-pro:
   stage: deploy
-  image: registry.gitlab.com/redmic-project/docker/docker-deploy
+  image: registry.gitlab.com/redmic-project/docker/docker-deploy:${DOCKER_DEPLOY_IMAGE_TAG}
   variables:
-    DOCKER_DRIVER: overlay2
     SSH_REMOTE: ${PRO_SSH_REMOTE}
-    SERVICE: ${CI_PROJECT_NAME}-view
-    IMAGE_NAME: ${CI_REGISTRY_IMAGE}
-    IMAGE_TAG: ${CI_COMMIT_SHA}
+    SERVICES_TO_CHECK: ${STACK}_${CI_PROJECT_NAME}-view
     COMPOSE_FILE: docker-compose.${CI_PROJECT_NAME}-view.tmpl.yml:docker-compose.${CI_PROJECT_NAME}-view.prod.yml
-  services:
-    - docker:dind
+    SPRING_PROFILES_ACTIVE: prod
+    PUBLIC_HOSTNAME: ${PRO_PUBLIC_HOSTNAME}
   script:
     - >
       deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
-      SPRING_PROFILES_ACTIVE=prod
+      SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
+      OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET} ELASTIC_CLUSTERNAME=${ELASTIC_CLUSTERNAME}
+      ELASTIC_USER=${ELASTIC_USER} ELASTIC_PASSWORD=${ELASTIC_PASSWORD} PUBLIC_HOSTNAME=${PUBLIC_HOSTNAME}
   environment:
     name: pro/${CI_PROJECT_NAME}-view
     url: https://${PRO_PUBLIC_HOSTNAME}/api/${CI_PROJECT_NAME}/view
