@@ -14,6 +14,7 @@ import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.BaseAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
+import org.elasticsearch.search.aggregations.pipeline.PipelineAggregatorBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -69,9 +70,12 @@ public class WindRoseESRepository extends RTimeSeriesESRepository<TimeSeries, Da
 
 		TermsQueryBuilder speedTermQuery = QueryBuilders.termsQuery("dataDefinition", speedDataDefinitions);
 
-		// Se consultan las estadísticas para crear los límites
+		aggBuilders.add(PipelineAggregatorBuilders.statsBucket("stats-buckets",
+				"avg_values_by_interval>speedDataDefinitionFilter>avg_speed"));
+
+		// Se consulta el número de elementos total para las estadísticas
 		aggBuilders.add(AggregationBuilders.filter("dataDefinitionFilter", speedTermQuery)
-				.subAggregation(AggregationBuilders.stats("speed_stats").field(defaultField)));
+				.subAggregation(AggregationBuilders.count("speed_count").field(defaultField)));
 
 		// Desde el cliente se envía en ms y aquí se pasa a seg
 		int timeInterval = (int) (Long.parseLong(aggs.get(2).getTerm()) / 1000);

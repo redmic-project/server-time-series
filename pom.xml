@@ -12,7 +12,7 @@
 	<groupId>es.redmic.time-series</groupId>
 	<artifactId>time-series</artifactId>
 	<packaging>pom</packaging>
-	<version>0.2.0</version>
+	<version>0.2.1</version>
 	<name>Time series</name>
 
 	<properties>
@@ -31,7 +31,7 @@
 		<!-- Añadir versión de la librería del tipo de vista elegida (elasticsearch/postgresql) -->
 		<redmic.view-lib.version>0.9.0</redmic.view-lib.version>
 
-		<redmic.time-series-lib.version>0.1.0</redmic.time-series-lib.version>
+		<redmic.time-series-lib.version>0.2.0</redmic.time-series-lib.version>
 
 		<!-- Versions of the OTHERS library used in the children -->
 		<ma.glasnost.orika.core.version>1.5.2</ma.glasnost.orika.core.version>
