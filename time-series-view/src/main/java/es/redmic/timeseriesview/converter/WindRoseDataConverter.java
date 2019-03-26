@@ -36,10 +36,18 @@ public class WindRoseDataConverter extends CustomConverter<Aggregations, WindRos
 		numSectors = (Integer) mappingContext.getProperty("numSectors");
 		
 		partitionNumber = (Integer) mappingContext.getProperty("partitionNumber");
+		
+		System.out.println(source.getAttributes().toString());
 
+		Integer count = (Integer) ElasticSearchUtils.getMapValue(source.getAttributes(),
+				"filter#dataDefinitionFilter").get("doc_count");
+		
 		StatsDTO stats = (StatsDTO) ElasticSearchUtils.getStatsFromAggregation(
-				ElasticSearchUtils.getMapValue(source.getAttributes(), "filter#dataDefinitionFilter"),
-					"stats#speed_stats", StatsDTO.class);
+				source.getAttributes(),
+					"stats_bucket#stats-buckets", StatsDTO.class);
+		
+		// Sobrescribe count para tener en cuenta todos los datos
+		stats.setCount(count);
 		
 		List<Map<String, Object>> values = (List<Map<String, Object>>) 
 				(ElasticSearchUtils.getMapValue(source.getAttributes(), "date_histogram#avg_values_by_interval"))
