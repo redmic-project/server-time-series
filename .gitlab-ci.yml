@@ -14,7 +14,7 @@ include:
 
 stages:
   - build-lib
-  - build-services
+  - build-service
   - license-list
   - package
   - test-package
