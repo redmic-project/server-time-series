@@ -33,6 +33,7 @@ maven-build-view:
   before_script:
     - mvn -f elasticsearch-cluster-runner compile
     - mvn -f elasticsearch-cluster-runner exec:java -Dexec.args="-numOfNode 1 -clusterName ${ELASTIC_CLUSTERNAME}" > /dev/null &
+    - sleep 30
 
 .deploy-commands:
   script:
