@@ -10,10 +10,7 @@ include:
     file: '/packaging.yml'
   - project: 'redmic-project/gitlab-ci-templates'
     ref: master
-    file: '/deployment-functional-unit-view.yml'
-  - project: 'redmic-project/gitlab-ci-templates'
-    ref: master
-    file: '/deployment-functional-unit-commands.yml'
+    file: '/deployment-functional-unit.yml'
 
 stages:
   - build-lib
