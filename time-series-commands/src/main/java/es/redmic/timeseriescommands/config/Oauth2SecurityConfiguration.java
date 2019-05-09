@@ -38,6 +38,8 @@ public class Oauth2SecurityConfiguration {
 		public void configure(HttpSecurity http) throws Exception {
 			// @formatter:off
 			
+			http.cors();
+			
 			http.anonymous().and().authorizeRequests()
 				.antMatchers(HttpMethod.GET, "/actuator/**").permitAll();
 			
