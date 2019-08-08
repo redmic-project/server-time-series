@@ -4,9 +4,10 @@ services:
   time-series-commands:
     environment:
       - JAVA_OPTS=-Xmx768m -Xms256m
-    resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          memory: 820M
+    deploy:
+        resources:
+            limits:
+              cpus: '1'
+              memory: 1G
+            reservations:
+              memory: 820M
