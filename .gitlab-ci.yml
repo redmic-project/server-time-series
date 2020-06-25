@@ -16,16 +16,13 @@ stages:
   - build-lib
   - build-service
   - license-list
+  - pre-package
   - package
-  - test-package
+  - post-package
   - deploy
 
 variables:
-  DOCKER_BUILD_ARGS: --build-arg PARENT_IMAGE_NAME=${REDMIC_SERVER_IMAGE_NAME} --build-arg PARENT_IMAGE_TAG=${REDMIC_SERVER_IMAGE_TAG}
-  STACK: time-series
-  LOGGING_LEVEL_ROOT: error
-  LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: error
-  LOGGING_LEVEL_ES_REDMIC: error
+  PROJECT_PARENT_NAME: time-series
 
 maven-build-view:
   variables:
@@ -34,21 +31,24 @@ maven-build-view:
     - mvn -f elasticsearch-cluster-runner compile
     - mvn -f elasticsearch-cluster-runner exec:java -Dexec.args="-numOfNode 1 -clusterName ${ELASTIC_CLUSTERNAME}" &
 
+.docker-build:
+  variables:
+    DBLD_PARENT_IMAGE_NAME: ${REDMIC_SERVER_IMAGE_NAME}
+    DBLD_PARENT_IMAGE_TAG: ${REDMIC_SERVER_IMAGE_TAG}
+    LOGGING_LEVEL_ROOT: error
+    LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: error
+    LOGGING_LEVEL_ES_REDMIC: error
+
 .deploy-commands:
-  script:
-    - >
-      deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
-      SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
-      OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET} PUBLIC_HOSTNAME=${PUBLIC_HOSTNAME}
+  variables:
+    STACK: ${PROJECT_PARENT_NAME}
+    SERVICES_TO_CHECK: ${PROJECT_PARENT_NAME}_${CI_PROJECT_NAME}-commands
   environment:
     url: https://${PUBLIC_HOSTNAME}/api/${CI_PROJECT_NAME}/commands
 
 .deploy-view:
-  script:
-    - >
-      deploy.sh IMAGE_NAME=${IMAGE_NAME} IMAGE_TAG=${IMAGE_TAG} COMPOSE_FILE=${COMPOSE_FILE}
-      SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} OAUTH_CLIENT_ID=${OAUTH_CLIENT_ID}
-      OAUTH_CLIENT_SECRET=${OAUTH_CLIENT_SECRET} ELASTIC_CLUSTERNAME=${ELASTIC_CLUSTERNAME}
-      ELASTIC_USER=${ELASTIC_USER} ELASTIC_PASSWORD=${ELASTIC_PASSWORD} PUBLIC_HOSTNAME=${PUBLIC_HOSTNAME}
+  variables:
+    STACK: ${PROJECT_PARENT_NAME}
+    SERVICES_TO_CHECK: ${PROJECT_PARENT_NAME}_${CI_PROJECT_NAME}-view
   environment:
     url: https://${PUBLIC_HOSTNAME}/api/${CI_PROJECT_NAME}/view
