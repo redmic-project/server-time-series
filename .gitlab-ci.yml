@@ -13,6 +13,7 @@ include:
     file: '/deployment-functional-unit.yml'
 
 stages:
+  - build-parent
   - build-lib
   - build-service
   - license-list
@@ -33,22 +34,6 @@ maven-build-view:
 
 .docker-build:
   variables:
+    COMPOSE_FILE_NAME: docker-compose.time-series.build.yml
     DBLD_PARENT_IMAGE_NAME: ${REDMIC_SERVER_IMAGE_NAME}
     DBLD_PARENT_IMAGE_TAG: ${REDMIC_SERVER_IMAGE_TAG}
-    LOGGING_LEVEL_ROOT: error
-    LOGGING_LEVEL_ORG_SPRINGFRAMEWORK: error
-    LOGGING_LEVEL_ES_REDMIC: error
-
-.deploy-commands:
-  variables:
-    STACK: ${PROJECT_PARENT_NAME}
-    SERVICES_TO_CHECK: ${PROJECT_PARENT_NAME}_${CI_PROJECT_NAME}-commands
-  environment:
-    url: https://${PUBLIC_HOSTNAME}/api/${CI_PROJECT_NAME}/commands
-
-.deploy-view:
-  variables:
-    STACK: ${PROJECT_PARENT_NAME}
-    SERVICES_TO_CHECK: ${PROJECT_PARENT_NAME}_${CI_PROJECT_NAME}-view
-  environment:
-    url: https://${PUBLIC_HOSTNAME}/api/${CI_PROJECT_NAME}/view
