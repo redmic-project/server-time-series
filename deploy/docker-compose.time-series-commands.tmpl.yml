@@ -9,7 +9,7 @@ services:
       OAUTH_CLIENT_ID:
       OAUTH_CLIENT_SECRET:
       MICROSERVICE_NAME: ${UNIT_NAME}-commands
-      SPRING_KAFKA_CLIENT-ID:
+      SPRING_KAFKA_CLIENT_ID:
     networks:
       metric-net:
       kafka-net:

@@ -12,7 +12,7 @@ services:
       ELASTIC_USER:
       ELASTIC_PASSWORD:
       MICROSERVICE_NAME: ${UNIT_NAME}-view
-      SPRING_KAFKA_CLIENT-ID:
+      SPRING_KAFKA_CLIENT_ID:
     networks:
       elastic-net:
       metric-net:
