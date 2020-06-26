@@ -2,6 +2,7 @@ version: '3.5'
 
 services:
   time-series:
+    image: ${IMAGE_NAME:-registry.gitlab.com/redmic-project/server/time-series}:${IMAGE_TAG:-latest}
     build:
       context: ..
       dockerfile: ${DOCKERFILE:-Dockerfile}
