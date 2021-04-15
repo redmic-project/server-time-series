@@ -13,6 +13,7 @@ services:
       ELASTIC_PASSWORD:
       MICROSERVICE_NAME: ${UNIT_NAME}-view
       SPRING_KAFKA_CLIENT_ID:
+      JAVA_OPTS:
     networks:
       elastic-net:
       metric-net:

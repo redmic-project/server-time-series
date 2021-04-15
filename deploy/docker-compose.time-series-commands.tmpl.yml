@@ -10,6 +10,7 @@ services:
       OAUTH_CLIENT_SECRET:
       MICROSERVICE_NAME: ${UNIT_NAME}-commands
       SPRING_KAFKA_CLIENT_ID:
+      JAVA_OPTS:
     networks:
       metric-net:
       kafka-net:
