@@ -20,7 +20,13 @@
 			<version>${redmic.broker-lib.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>es.redmic.lib</groupId>
+			<artifactId>models</artifactId>
+			<version>${redmic.models.version}</version>
+		</dependency>
+
 		<!-- Tests -->
 		<dependency>
 			<groupId>es.redmic.lib</groupId>
@@ -28,7 +34,7 @@
 			<version>${redmic.test-utils.version}</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.glassfish</groupId>
 			<artifactId>javax.el</artifactId>
