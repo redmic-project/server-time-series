@@ -9,9 +9,9 @@ package es.redmic.timeseriesview.config;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,13 +20,8 @@ package es.redmic.timeseriesview.config;
  * #L%
  */
 
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.annotation.SessionScope;
 
-import es.redmic.restlib.common.service.UserUtilsServiceItfc;
-import es.redmic.restlib.config.UserBaseService;
-
-@SessionScope
+/*-@SessionScope
 @Service
 public class UserService extends UserBaseService implements UserUtilsServiceItfc {
 
@@ -34,7 +29,7 @@ public class UserService extends UserBaseService implements UserUtilsServiceItfc
 	 * Implementa la interfaz para obtener información de usuarios
 	 */
 
-	public UserService() {
+	/*-public UserService() {
 		super();
-	}
-}
+	}-*/
+//}
