@@ -1,10 +1,10 @@
-package es.redmic.timeseriesview.converter;
+package es.redmic.timeseriesview.mapper;
 
 /*-
  * #%L
  * Time series view
  * %%
- * Copyright (C) 2019 REDMIC Project / Server
+ * Copyright (C) 2019 - 2021 REDMIC Project / Server
  * %%
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,65 +23,55 @@ package es.redmic.timeseriesview.converter;
 import java.util.List;
 import java.util.Map;
 
+import org.mapstruct.Mapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import es.redmic.elasticsearchlib.common.utils.ElasticSearchUtils;
 import es.redmic.exception.common.NoContentException;
 import es.redmic.models.es.geojson.common.model.Aggregations;
+import es.redmic.timeserieslib.dto.series.TimeSeriesDTO;
+import es.redmic.timeseriesview.common.mapper.SeriesESMapper;
 import es.redmic.timeseriesview.dto.timeseries.StatsDTO;
 import es.redmic.timeseriesview.dto.windrose.LimitsDTO;
 import es.redmic.timeseriesview.dto.windrose.WindRoseDataDTO;
-import ma.glasnost.orika.CustomConverter;
-import ma.glasnost.orika.MappingContext;
-import ma.glasnost.orika.metadata.Type;
+import es.redmic.timeseriesview.model.timeseries.TimeSeries;
 
-@Component
-public class WindRoseDataConverter extends CustomConverter<Aggregations, WindRoseDataDTO> {
+@Mapper
+public abstract class WindRoseESMapper extends SeriesESMapper<TimeSeriesDTO, TimeSeries> {
 
-	private Integer numSectors;
-
-	private Integer partitionNumber;
-
-	protected final static Logger LOGGER = LoggerFactory.getLogger(WindRoseDataConverter.class);
+	protected final Logger LOGGER = LoggerFactory.getLogger(WindRoseESMapper.class);
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public WindRoseDataDTO convert(Aggregations source, Type<? extends WindRoseDataDTO> destinationType,
-			MappingContext mappingContext) {
+	public WindRoseDataDTO map(Aggregations aggregations, Map<Object, Object> globalProperties) {
 
-		// @formatter:off
-		
-		numSectors = (Integer) mappingContext.getProperty("numSectors");
-		
-		partitionNumber = (Integer) mappingContext.getProperty("partitionNumber");
-		
-		System.out.println(source.getAttributes().toString());
+		Integer numSectors = (Integer) globalProperties.get("numSectors");
 
-		Integer count = (Integer) ElasticSearchUtils.getMapValue(source.getAttributes(),
-				"filter#dataDefinitionFilter").get("doc_count");
-		
+		Integer partitionNumber = (Integer) globalProperties.get("partitionNumber");
+
+		Integer count = (Integer) ElasticSearchUtils.getMapValue(aggregations.getAttributes(),
+			"filter#dataDefinitionFilter").get("doc_count");
+
 		StatsDTO stats = (StatsDTO) ElasticSearchUtils.getStatsFromAggregation(
-				source.getAttributes(),
+			aggregations.getAttributes(),
 					"stats_bucket#stats-buckets", StatsDTO.class);
-		
+
 		// Sobrescribe count para tener en cuenta todos los datos
 		stats.setCount(count);
-		
-		List<Map<String, Object>> values = (List<Map<String, Object>>) 
-				(ElasticSearchUtils.getMapValue(source.getAttributes(), "date_histogram#avg_values_by_interval"))
+
+		List<Map<String, Object>> values = (List<Map<String, Object>>)
+				(ElasticSearchUtils.getMapValue(aggregations.getAttributes(), "date_histogram#avg_values_by_interval"))
 					.get("buckets");
-		
-		if (values == null || values.size() == 0) {
+
+		if (values == null || values.isEmpty()) {
 			LOGGER.error("No es posible realizar los cálculos. No se ha obtenido resultados");
 			throw new NoContentException();
 		}
-		
+
 		Double sectorLength = 360.0 / numSectors;
-		
+
 		Double rotationOffset = sectorLength / 2;
-		
+
 		// @formatter:on
 
 		Double max = stats.getMax();
@@ -97,24 +87,25 @@ public class WindRoseDataConverter extends CustomConverter<Aggregations, WindRos
 		for (int i = 0; i < values.size(); i++) {
 
 			// @formatter:off
-			
+
 			Map<String, Object> directionValue = ElasticSearchUtils.getMapValue(
 				ElasticSearchUtils.getMapValue(values.get(i), "filter#directionDataDefinitionFilter"),
-					"avg#avg_direction"),
-				speedData = ElasticSearchUtils.getMapValue(values.get(i), "filter#speedDataDefinitionFilter");
-			
-			Double direction = (Double) directionValue.get("value"),
-					speed = (Double) ElasticSearchUtils.getMapValue(speedData, "avg#avg_speed").get("value");
-			
+					"avg#avg_direction");
+
+			Map<String, Object> speedData = ElasticSearchUtils.getMapValue(values.get(i), "filter#speedDataDefinitionFilter");
+
+			Double direction = (Double) directionValue.get("value");
+			Double speed = (Double) ElasticSearchUtils.getMapValue(speedData, "avg#avg_speed").get("value");
+
 			if (direction != null && speed != null) {
-			
-				Integer sectorIndex = getSectorIndex(direction, sectorLength, rotationOffset),
-					splitIndex = getSplitIndex(speed, limits);
-				
+
+				Integer sectorIndex = getSectorIndex(direction, sectorLength, rotationOffset, numSectors);
+				Integer splitIndex = getSplitIndex(speed, limits);
+
 				windRoseDataDTO.getData().get(sectorIndex).get(splitIndex).addCount();
 			}
 			else {
-				LOGGER.info("Dirección o velocidad con valores nulos en la agregación", values.get(i).toString());
+				LOGGER.info("Dirección o velocidad con valores nulos en la agregación {}", values.get(i));
 			}
 		}
 
@@ -130,7 +121,7 @@ public class WindRoseDataConverter extends CustomConverter<Aggregations, WindRos
 	/**
 	 * Devuelve el índice dentro del array de sectores que le corresponde al dato
 	 */
-	private Integer getSectorIndex(Double value, Double sectorLength, Double rotationOffset) {
+	private Integer getSectorIndex(Double value, Double sectorLength, Double rotationOffset, Integer numSectors) {
 
 		if (((value >= (360 - rotationOffset)) && (value <= 360))
 				|| ((value >= 0) && (value < (sectorLength - rotationOffset)))) {
@@ -146,7 +137,7 @@ public class WindRoseDataConverter extends CustomConverter<Aggregations, WindRos
 			limit += sectorLength;
 		}
 
-		LOGGER.warn("No se ecuentra un sector donde clasificar el siguiente valor de dirección: ", value);
+		LOGGER.warn("No se ecuentra un sector donde clasificar el siguiente valor de dirección: {}", value);
 		return null;
 	}
 
@@ -160,7 +151,7 @@ public class WindRoseDataConverter extends CustomConverter<Aggregations, WindRos
 				return i;
 			}
 		}
-		LOGGER.warn("No se ecuentra un split donde clasificar el siguiente valor de velocidad: ", value);
+		LOGGER.warn("No se ecuentra un split donde clasificar el siguiente valor de velocidad: {}", value);
 		return null;
 	}
 }

@@ -9,9 +9,9 @@ package es.redmic.timeseriesview.repository;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -35,43 +35,49 @@ import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.BaseAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramInterval;
 import org.elasticsearch.search.aggregations.pipeline.PipelineAggregatorBuilders;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.joda.time.format.DateTimeFormat;
+import org.mapstruct.factory.Mappers;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import es.redmic.elasticsearchlib.timeseries.repository.RTimeSeriesESRepository;
+import es.redmic.elasticsearchlib.data.repository.RDataESRepository;
+import es.redmic.elasticsearchlib.series.repository.IBaseSeriesESRepository;
 import es.redmic.models.es.common.query.dto.AggsPropertiesDTO;
 import es.redmic.models.es.common.query.dto.DataQueryDTO;
-import es.redmic.models.es.data.common.model.DataSearchWrapper;
 import es.redmic.timeseriesview.common.query.SeriesQueryUtils;
 import es.redmic.timeseriesview.dto.windrose.WindRoseDataDTO;
+import es.redmic.timeseriesview.mapper.WindRoseESMapper;
 import es.redmic.timeseriesview.model.timeseries.TimeSeries;
-import es.redmic.viewlib.config.MapperScanBeanItfc;
-import ma.glasnost.orika.MappingContext;
 
 @Repository
-public class WindRoseESRepository extends RTimeSeriesESRepository<TimeSeries, DataQueryDTO> {
+public class WindRoseESRepository extends RDataESRepository<TimeSeries, DataQueryDTO> implements IBaseSeriesESRepository {
+
+	@Value("${timeseries.index.pattern}")
+	String timeSeriesIndexPattern;
 
 	public WindRoseESRepository() {
-		super();
+		super(IBaseSeriesESRepository.INDEX, IBaseSeriesESRepository.TYPE, true);
 	}
 
-	@Autowired
-	protected MapperScanBeanItfc mapper;
+	private static final String DATA_DEFINITION_PROPERTY = "dataDefinition";
+
+	@Override
+	protected String getIndex(final TimeSeries modelToIndex) {
+		return getIndex()[0] + "-" + modelToIndex.getDate().toString(DateTimeFormat.forPattern(timeSeriesIndexPattern));
+	}
 
 	/**
 	 * Método que realiza la consulta y manda a convertir el resultado al dto
 	 * esperado
 	 */
 
-	@SuppressWarnings("unchecked")
 	public WindRoseDataDTO getWindRoseData(DataQueryDTO query, Integer numSectors, Integer partitionNumber) {
 
-		Map<Object, Object> globalProperties = new HashMap<Object, Object>();
+		Map<Object, Object> globalProperties = new HashMap<>();
 		globalProperties.put("numSectors", numSectors);
 		globalProperties.put("partitionNumber", partitionNumber);
 
-		return mapper.getMapperFacade().convert(((DataSearchWrapper<TimeSeries>) find(query)).getAggregations(),
-				WindRoseDataDTO.class, null, new MappingContext(globalProperties));
+		return Mappers.getMapper(WindRoseESMapper.class).map(find(query).getAggregations(), globalProperties);
 	}
 
 	/**
@@ -83,12 +89,12 @@ public class WindRoseESRepository extends RTimeSeriesESRepository<TimeSeries, Da
 
 		String listSplitRegex = "\\s*,\\s*";
 
-		List<BaseAggregationBuilder> aggBuilders = new ArrayList<BaseAggregationBuilder>();
+		List<BaseAggregationBuilder> aggBuilders = new ArrayList<>();
 
-		List<String> speedDataDefinitions = Arrays.asList(aggs.get(0).getTerm().split(listSplitRegex)),
-				directionDataDefinitions = Arrays.asList(aggs.get(1).getTerm().split(listSplitRegex));
+		List<String> speedDataDefinitions = Arrays.asList(aggs.get(0).getTerm().split(listSplitRegex));
+		List<String> directionDataDefinitions = Arrays.asList(aggs.get(1).getTerm().split(listSplitRegex));
 
-		TermsQueryBuilder speedTermQuery = QueryBuilders.termsQuery("dataDefinition", speedDataDefinitions);
+		TermsQueryBuilder speedTermQuery = QueryBuilders.termsQuery(DATA_DEFINITION_PROPERTY, speedDataDefinitions);
 
 		aggBuilders.add(PipelineAggregatorBuilders.statsBucket("stats-buckets",
 				"avg_values_by_interval>speedDataDefinitionFilter>avg_speed"));
@@ -104,7 +110,7 @@ public class WindRoseESRepository extends RTimeSeriesESRepository<TimeSeries, Da
 
 		AggregationBuilder directionValues = AggregationBuilders
 				.filter("directionDataDefinitionFilter",
-						QueryBuilders.termsQuery("dataDefinition", directionDataDefinitions))
+						QueryBuilders.termsQuery(DATA_DEFINITION_PROPERTY, directionDataDefinitions))
 				.subAggregation(AggregationBuilders.avg("avg_direction").field(defaultField));
 
 		AggregationBuilder speedValues = AggregationBuilders.filter("speedDataDefinitionFilter", speedTermQuery)
@@ -121,9 +127,9 @@ public class WindRoseESRepository extends RTimeSeriesESRepository<TimeSeries, Da
 	@Override
 	public QueryBuilder getTermQuery(Map<String, Object> terms, BoolQueryBuilder query) {
 
-		if (terms.containsKey("dataDefinition")) {
-			List<Integer> ids = (List<Integer>) terms.get("dataDefinition");
-			query.must(QueryBuilders.boolQuery().filter(QueryBuilders.termsQuery("dataDefinition", ids)));
+		if (terms.containsKey(DATA_DEFINITION_PROPERTY)) {
+			List<Integer> ids = (List<Integer>) terms.get(DATA_DEFINITION_PROPERTY);
+			query.must(QueryBuilders.boolQuery().filter(QueryBuilders.termsQuery(DATA_DEFINITION_PROPERTY, ids)));
 		}
 
 		if (terms.containsKey("dates")) {

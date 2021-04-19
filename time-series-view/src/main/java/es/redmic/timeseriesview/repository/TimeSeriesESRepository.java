@@ -1,5 +1,13 @@
 package es.redmic.timeseriesview.repository;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.BaseAggregationBuilder;
+import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogramAggregationBuilder;
+
 /*-
  * #%L
  * Time series view
@@ -9,9 +17,9 @@ package es.redmic.timeseriesview.repository;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,43 +28,45 @@ package es.redmic.timeseriesview.repository;
  * #L%
  */
 
-import org.elasticsearch.index.query.BoolQueryBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
 import org.springframework.stereotype.Repository;
 
-import es.redmic.elasticsearchlib.timeseries.repository.RWTimeSeriesESRepository;
-import es.redmic.models.es.common.dto.EventApplicationResult;
+import es.redmic.elasticsearchlib.common.query.SeriesQueryUtils;
+import es.redmic.elasticsearchlib.series.repository.RWSeriesESRepository;
+import es.redmic.models.es.common.query.dto.AggsPropertiesDTO;
 import es.redmic.models.es.common.query.dto.DataQueryDTO;
-import es.redmic.timeseriesview.common.query.SeriesQueryUtils;
+
 import es.redmic.timeseriesview.model.timeseries.TimeSeries;
 
 @Repository
-public class TimeSeriesESRepository extends RWTimeSeriesESRepository<TimeSeries, DataQueryDTO> {
+public class TimeSeriesESRepository extends RWSeriesESRepository<TimeSeries, DataQueryDTO> {
 
 	public TimeSeriesESRepository() {
 		super();
 	}
 
 	@Override
-	protected BoolQueryBuilder getQuery(DataQueryDTO queryDTO, QueryBuilder internalQuery, QueryBuilder partialQuery) {
-		return SeriesQueryUtils.getQuery(queryDTO, getInternalQuery(), partialQuery);
+	protected List<BaseAggregationBuilder> getAggs(DataQueryDTO elasticQueryDTO) {
+
+		List<AggsPropertiesDTO> aggs = elasticQueryDTO.getAggs();
+
+		if (elasticQueryDTO.getInterval() == null && (aggs == null || aggs.isEmpty()))
+			return Collections.emptyList();
+
+		List<BaseAggregationBuilder> aggsBuilder = new ArrayList<>();
+
+		if (aggs.get(0) == null)
+			return Collections.emptyList();
+
+		if (elasticQueryDTO.getInterval() != null && (aggs.get(0).getField().equals("temporaldata"))) {
+
+			aggsBuilder.add(getTemporalDataAggregationBuilder(elasticQueryDTO));
+		}
+		return aggsBuilder;
 	}
 
-	@Override
-	protected EventApplicationResult checkDeleteConstraintsFulfilled(String modelToIndex) {
-		// TODO Implementar comprobaciones
-		return new EventApplicationResult(true);
-	}
+	private DateHistogramAggregationBuilder getTemporalDataAggregationBuilder(DataQueryDTO elasticQueryDTO) {
 
-	@Override
-	protected EventApplicationResult checkInsertConstraintsFulfilled(TimeSeries modelToIndex) {
-		// TODO Implementar comprobaciones
-		return new EventApplicationResult(true);
-	}
-
-	@Override
-	protected EventApplicationResult checkUpdateConstraintsFulfilled(TimeSeries modelToIndex) {
-		// TODO Implementar comprobaciones
-		return new EventApplicationResult(true);
+		return getDateHistogramAggregation(SeriesQueryUtils.getInterval(elasticQueryDTO.getInterval()))
+				.subAggregation(AggregationBuilders.stats(defaultField).field(defaultField));
 	}
 }
