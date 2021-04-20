@@ -22,6 +22,7 @@ package es.redmic.test.timeseriesview.integration.controller;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -200,6 +201,22 @@ public class TimeSeriesControllerTest {
 				.andExpect(jsonPath("$.success", is(true)))
 				.andExpect(jsonPath("$.body.data", notNullValue()))
 				.andExpect(jsonPath("$.body.data.length()", is(0)));
+
+		// @formatter:on
+	}
+
+	@Test
+	public void timeSeries_Return200_WhenSearchSchema() throws Exception {
+
+		// @formatter:off
+
+		this.mockMvc
+				.perform(get(TIMESERIES_PATH + TEMPORALDATA_PATH + "/_search/_schema")
+					.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().is(200))
+				.andExpect(jsonPath("$.success", is(true)))
+				.andExpect(jsonPath("$.body.schema", notNullValue()))
+				.andExpect(jsonPath("$.body.schema.title", is("Data Query DTO")));
 
 		// @formatter:on
 	}
