@@ -44,7 +44,7 @@ import es.redmic.timeseriesview.model.timeseries.TimeSeries;
 import es.redmic.timeseriesview.service.TimeSeriesESService;
 
 @RestController
-@RequestMapping(value = "${controller.mapping.TIMESERIES}")
+@RequestMapping()
 public class TimeSeriesController extends RSeriesController<TimeSeries, TimeSeriesDTO, DataQueryDTO>{
 
 	private TimeSeriesESService serviceES;
@@ -80,7 +80,7 @@ public class TimeSeriesController extends RSeriesController<TimeSeries, TimeSeri
 		return serviceES.findTemporalDataStatistics(queryDTO);
 	}
 
-	@PostMapping(value = "${controller.mapping.SERIES_WINDROSE}/_search")
+	@PostMapping(value = "${controller.mapping.TIMESERIES_ACTIVITY}/${controller.mapping.SERIES_WINDROSE}/_search")
 	@ResponseBody
 	public SuperDTO getRosewindData(@PathVariable(name = "activityId", required = false) String activityId,
 			@Valid @RequestBody DataQueryDTO queryDTO, BindingResult bindingResult) {

@@ -9,9 +9,9 @@ package es.redmic.test.timeseriesview.integration.controller;
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -80,8 +80,8 @@ public class WindRoseControllerTest {
 
 	private String activityId = "1286";
 
-	@Value("${controller.mapping.TIMESERIES}")
-	private String TIMESERIES_PATH;
+	@Value("${controller.mapping.TIMESERIES_ACTIVITY}")
+	private String TIMESERIES_ACTIVITY_PATH;
 
 	@Value("${controller.mapping.SERIES_WINDROSE}")
 	private String WINDROSE_PATH;
@@ -93,7 +93,6 @@ public class WindRoseControllerTest {
 
 	private static HashMap<String, Object> query;
 
-	@SuppressWarnings("serial")
 	@BeforeClass
 	public static void beforeClass() {
 
@@ -117,7 +116,7 @@ public class WindRoseControllerTest {
 			add(18);
 			add(19);
 		}};
-		
+
 		// @formatter:on
 
 		Map<String, Object> dataDefinition = new HashMap<>();
@@ -137,7 +136,7 @@ public class WindRoseControllerTest {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain)
 				.build();
 
-		TIMESERIES_PATH = TIMESERIES_PATH.replace("{activityId}", activityId);
+		TIMESERIES_ACTIVITY_PATH = TIMESERIES_ACTIVITY_PATH.replace("{activityId}", activityId);
 
 		// Guardar timeseries de prueba
 
@@ -161,18 +160,18 @@ public class WindRoseControllerTest {
 	public void windRose16Sectors6Splits_Return200_WhenSearchIsCorrect() throws Exception {
 
 		// @formatter:off
-		
+
 		Integer numSectors = 16,
 				numSplits = 6;
-		
+
 		String windRoseResult = "/data/windrose/windRoseResult16Sectors6Splits.json";
-		
-		
+
+
 		((Map<String, Object>) query.get("terms")).put("numSectors", numSectors);
 		((Map<String, Object>) query.get("terms")).put("numSplits", numSplits);
-		
+
 		this.mockMvc
-				.perform(post(TIMESERIES_PATH + WINDROSE_PATH + "/_search").content(mapper.writeValueAsString(query))
+				.perform(post(TIMESERIES_ACTIVITY_PATH + WINDROSE_PATH + "/_search").content(mapper.writeValueAsString(query))
 					.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.success", is(true)))
@@ -189,17 +188,17 @@ public class WindRoseControllerTest {
 	public void windRose36Sectors10Splits_Return200_WhenSearchIsCorrect() throws Exception {
 
 		// @formatter:off
-		
+
 		Integer numSectors = 36,
 				numSplits = 10;
-		
+
 		String windRoseResult = "/data/windrose/windRoseResult36Sectors10Splits.json";
-		
+
 		((Map<String, Object>) query.get("terms")).put("numSectors", numSectors);
 		((Map<String, Object>) query.get("terms")).put("numSplits", numSplits);
-		
+
 		this.mockMvc
-				.perform(post(TIMESERIES_PATH + WINDROSE_PATH + "/_search").content(mapper.writeValueAsString(query))
+				.perform(post(TIMESERIES_ACTIVITY_PATH + WINDROSE_PATH + "/_search").content(mapper.writeValueAsString(query))
 					.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.success", is(true)))
@@ -207,7 +206,7 @@ public class WindRoseControllerTest {
 				.andExpect(jsonPath("$.body.limits.length()", is(numSplits)))
 				.andExpect(jsonPath("$.body.data.length()", is(numSectors)))
 				.andExpect(jsonPath("$.body", is(mapper.readValue(getClass().getResource(windRoseResult).openStream(), Map.class))));
-		
+
 		// @formatter:on
 	}
 
@@ -216,18 +215,18 @@ public class WindRoseControllerTest {
 	public void windRose_Return204_WhenNoDataFound() throws Exception {
 
 		// @formatter:off
-		
+
 		Integer numSectors = 16,
 				numSplits = 6;
-		
+
 		((Map<String, Object>) query.get("terms")).put("numSectors", numSectors);
 		((Map<String, Object>) query.get("terms")).put("numSplits", numSplits);
-		
+
 		((Map<String, Object>) query.get("dateLimits")).put("startDate", new DateTime(2018, 1, 1, 0, 0, 0, 0, DateTimeZone.UTC));
 		((Map<String, Object>) query.get("dateLimits")).put("endDate", new DateTime(2018, 2, 1, 0, 0, 0, 0, DateTimeZone.UTC));
-		
+
 		this.mockMvc
-				.perform(post(TIMESERIES_PATH + WINDROSE_PATH + "/_search").content(mapper.writeValueAsString(query))
+				.perform(post(TIMESERIES_ACTIVITY_PATH + WINDROSE_PATH + "/_search").content(mapper.writeValueAsString(query))
 					.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(204));
 

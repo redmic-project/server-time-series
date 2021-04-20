@@ -81,11 +81,6 @@ public class TimeSeriesControllerTest {
 
 	private String timeSeries = "/data/timeseries/timeSeriesData.json";
 
-	private String activityId = "1286";
-
-	@Value("${controller.mapping.TIMESERIES}")
-	private String TIMESERIES_PATH;
-
 	@Value("${controller.mapping.SERIES_TEMPORALDATA}")
 	private String TEMPORALDATA_PATH;
 
@@ -128,8 +123,6 @@ public class TimeSeriesControllerTest {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain)
 				.build();
 
-		//TIMESERIES_PATH = TIMESERIES_PATH.replace("{activityId}", activityId);
-
 		// Guardar timeseries de prueba
 
 		TypeReference<List<TimeSeries>> type = new TypeReference<List<TimeSeries>>() {
@@ -160,7 +153,7 @@ public class TimeSeriesControllerTest {
 		dataQuery.setInterval("1h");
 
 		this.mockMvc
-				.perform(post(TIMESERIES_PATH + TEMPORALDATA_PATH + "/_search").content(getQueryAsString(dataQuery))
+				.perform(post(TEMPORALDATA_PATH + "/_search").content(getQueryAsString(dataQuery))
 					.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(200))
 				.andExpect(jsonPath("$.success", is(true)))
@@ -175,7 +168,7 @@ public class TimeSeriesControllerTest {
 		// @formatter:off
 
 		this.mockMvc
-				.perform(post(TIMESERIES_PATH + TEMPORALDATA_PATH + "/_search").content(getQueryAsString(dataQuery))
+				.perform(post(TEMPORALDATA_PATH + "/_search").content(getQueryAsString(dataQuery))
 					.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(200))
 				.andExpect(jsonPath("$.success", is(true)))
@@ -195,7 +188,7 @@ public class TimeSeriesControllerTest {
 		dataQuery.getDateLimits().setEndDate(new DateTime(2018, 2, 1, 0, 0, 0, 0, DateTimeZone.UTC));
 
 		this.mockMvc
-				.perform(post(TIMESERIES_PATH + TEMPORALDATA_PATH + "/_search").content(getQueryAsString(dataQuery))
+				.perform(post(TEMPORALDATA_PATH + "/_search").content(getQueryAsString(dataQuery))
 					.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(200))
 				.andExpect(jsonPath("$.success", is(true)))
@@ -211,7 +204,7 @@ public class TimeSeriesControllerTest {
 		// @formatter:off
 
 		this.mockMvc
-				.perform(get(TIMESERIES_PATH + TEMPORALDATA_PATH + "/_search/_schema")
+				.perform(get(TEMPORALDATA_PATH + "/_search/_schema")
 					.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().is(200))
 				.andExpect(jsonPath("$.success", is(true)))
