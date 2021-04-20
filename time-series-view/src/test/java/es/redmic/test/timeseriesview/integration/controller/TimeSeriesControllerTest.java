@@ -128,7 +128,7 @@ public class TimeSeriesControllerTest {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain)
 				.build();
 
-		TIMESERIES_PATH = TIMESERIES_PATH.replace("{activityId}", activityId);
+		//TIMESERIES_PATH = TIMESERIES_PATH.replace("{activityId}", activityId);
 
 		// Guardar timeseries de prueba
 
