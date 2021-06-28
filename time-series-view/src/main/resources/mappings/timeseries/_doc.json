@@ -63,7 +63,8 @@
 					"type": "keyword"
 				},
 				"date": {
-					"type": "date"
+					"type": "date",
+					"format": "date_optional_time"
 				},
 				"featuresRelations": {
 					"type": "keyword"
@@ -72,16 +73,16 @@
 					"type": "keyword"
 				},
 				"dataDefinition": {
-					"type": "keyword"
+					"type": "long"
 				},
 				"z": {
-					"type": "half_float"
+					"type": "double"
 				},
 				"deviation": {
-					"type": "half_float"
+					"type": "double"
 				},
 				"value": {
-					"type": "float"
+					"type": "double"
 				},
 				"remark": {
 					"type": "text"
@@ -93,10 +94,86 @@
 					"type": "keyword"
 				},
 				"updated": {
-					"type": "date"
+					"type": "date",
+					"format": "date_time"
 				},
 				"inserted": {
-					"type": "date"
+					"type": "date",
+					"format": "date_time"
+				},
+				"confidence": {
+					"dynamic": "false",
+					"properties": {
+						"id": {
+							"type": "long"
+						},
+						"name": {
+							"type": "keyword"
+						}
+					}
+				},
+				"object": {
+					"type": "nested",
+					"dynamic": "false",
+					"properties": {
+						"classification": {
+							"type": "nested",
+							"dynamic": "false",
+							"properties": {
+								"objectType": {
+									"dynamic": "false",
+									"properties": {
+										"code": {
+											"type": "keyword",
+											"fields": {
+												"suggest": {
+													"type": "text",
+													"analyzer": "autocomplete",
+													"search_analyzer": "lower_analyzer"
+												}
+											}
+										},
+										"id": {
+											"type": "long"
+										},
+										"level": {
+											"type": "integer"
+										},
+										"name": {
+											"type": "keyword",
+											"fields": {
+												"suggest": {
+													"type": "text",
+													"analyzer": "autocomplete",
+													"search_analyzer": "lower_analyzer"
+												}
+											}
+										},
+										"path": {
+											"type": "keyword",
+											"fields": {
+												"hierarchy": {
+													"type": "text",
+													"store": true,
+													"analyzer": "path-analyzer"
+												},
+												"split": {
+													"type": "text",
+													"analyzer": "split-path-analyzer"
+												}
+											}
+										}
+									}
+								}
+							}
+						},
+						"id": {
+							"type": "long"
+						},
+						"name": {
+							"type": "keyword"
+						}
+					}
 				}
 			}
 		}
