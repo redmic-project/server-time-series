@@ -30,7 +30,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mapstruct.factory.Mappers;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import es.redmic.jts4jackson.module.JTSModule;
@@ -39,6 +41,7 @@ import es.redmic.timeseriesview.mapper.DataHistogramESMapper;
 import es.redmic.timeseriesview.mapper.ObjectCollectingSeriesESMapper;
 import es.redmic.timeseriesview.model.objectcollectingseries.ObjectCollectingSeries;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ObjectCollectMappingTest {
 
 	protected ObjectMapper jacksonMapper = new ObjectMapper()

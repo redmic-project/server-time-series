@@ -123,6 +123,6 @@ public class ObjectCollectingSeriesESService
 
 	@Override
 	protected String[] getDefaultSuggestFields() {
-		return new String[] { DEFAULT_SEARCH_FIELD };;
+		return new String[] { DEFAULT_SEARCH_FIELD };
 	}
 }
