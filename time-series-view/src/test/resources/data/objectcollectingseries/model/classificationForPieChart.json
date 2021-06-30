@@ -1,0 +1,438 @@
+{
+	"took": 15,
+	"timed_out": false,
+	"_shards": {
+		"total": 5,
+		"successful": 5,
+		"failed": 0
+	},
+	"hits": {
+		"total": 148,
+		"max_score": 0,
+		"hits": []
+	},
+	"aggregations": {
+		"dateHistogram": {
+			"buckets": [{
+				"key_as_string": "2013-01-01",
+				"key": 1356998400000,
+				"doc_count": 17,
+				"object": {
+					"doc_count": 147,
+					"objectType": {
+						"doc_count_error_upper_bound": 0,
+						"sum_other_doc_count": 0,
+						"buckets": [{
+							"key": "Basura - OSPAR",
+							"doc_count": 74,
+							"objectClassification": {
+								"doc_count": 34,
+								"level": {
+									"doc_count_error_upper_bound": 0,
+									"sum_other_doc_count": 0,
+									"buckets": [{
+										"key": 3,
+										"doc_count": 17,
+										"objectClassificationPath": {
+											"doc_count_error_upper_bound": 0,
+											"sum_other_doc_count": 0,
+											"buckets": [{
+												"key": "root.8.9.122",
+												"doc_count": 9,
+												"objectClassificationName": {
+													"doc_count_error_upper_bound": 0,
+													"sum_other_doc_count": 0,
+													"buckets": [{
+														"key": "PLÁSTICO/ POLIESTIRENO",
+														"doc_count": 9,
+														"stats": {
+															"doc_count": 9,
+															"value": {
+																"count": 9,
+																"min": 1,
+																"max": 15,
+																"avg": 3.888888888888889,
+																"sum": 35.0
+															}
+														}
+													}]
+												}
+											}]
+										}
+									}, {
+										"key": 4,
+										"doc_count": 17,
+										"objectClassificationPath": {
+											"doc_count_error_upper_bound": 0,
+											"sum_other_doc_count": 0,
+											"buckets": [{
+												"key": "root.8.9.122.15",
+												"doc_count": 1,
+												"objectClassificationName": {
+													"doc_count_error_upper_bound": 0,
+													"sum_other_doc_count": 0,
+													"buckets": [{
+														"key": "Tapas y Tapones",
+														"doc_count": 1,
+														"stats": {
+															"doc_count": 1,
+															"value": {
+																"count": 1,
+																"min": 15,
+																"max": 15,
+																"avg": 15,
+																"sum": 15.0
+															}
+														}
+													}]
+												}
+											}, {
+												"key": "root.8.9.122.2",
+												"doc_count": 1,
+												"objectClassificationName": {
+													"doc_count_error_upper_bound": 0,
+													"sum_other_doc_count": 0,
+													"buckets": [{
+														"key": "Bolsas de la compra",
+														"doc_count": 1,
+														"stats": {
+															"doc_count": 1,
+															"value": {
+																"count": 1,
+																"min": 3,
+																"max": 3,
+																"avg": 3,
+																"sum": 3.0
+															}
+														}
+													}]
+												}
+											}, {
+												"key": "root.8.9.122.20",
+												"doc_count": 1,
+												"objectClassificationName": {
+													"doc_count_error_upper_bound": 0,
+													"sum_other_doc_count": 0,
+													"buckets": [{
+														"key": "Juguetes",
+														"doc_count": 1,
+														"stats": {
+															"doc_count": 1,
+															"value": {
+																"count": 1,
+																"min": 2,
+																"max": 2,
+																"avg": 2,
+																"sum": 2.0
+															}
+														}
+													}]
+												}
+											}]
+										}
+									}]
+								}
+							}
+						}, {
+							"key": "Basura - Origen",
+							"doc_count": 112,
+							"objectClassification": {
+								"doc_count": 448,
+								"level": {
+									"doc_count_error_upper_bound": 0,
+									"sum_other_doc_count": 0,
+									"buckets": [{
+										"key": 3,
+										"doc_count": 112,
+										"objectClassificationPath": {
+											"doc_count_error_upper_bound": 0,
+											"sum_other_doc_count": 0,
+											"buckets": [{
+												"key": "root.8.10.25",
+												"doc_count": 31,
+												"objectClassificationName": {
+													"doc_count_error_upper_bound": 0,
+													"sum_other_doc_count": 0,
+													"buckets": [{
+														"key": "Turismo",
+														"doc_count": 31,
+														"stats": {
+															"doc_count": 31,
+															"value": {
+																"count": 31,
+																"min": 0,
+																"max": 9,
+																"avg": 5.225806451612903,
+																"sum": 162.0
+															}
+														}
+													}]
+												}
+											}]
+										}
+									}, {
+										"key": 4,
+										"doc_count": 112,
+										"objectClassificationPath": {
+											"doc_count_error_upper_bound": 0,
+											"sum_other_doc_count": 0,
+											"buckets": [{
+												"key": "root.8.10.25.239",
+												"doc_count": 1,
+												"objectClassificationName": {
+													"doc_count_error_upper_bound": 0,
+													"sum_other_doc_count": 0,
+													"buckets": [{
+														"key": "Cintas portalatas",
+														"doc_count": 1,
+														"stats": {
+															"doc_count": 1,
+															"value": {
+																"count": 1,
+																"min": 5,
+																"max": 5,
+																"avg": 5,
+																"sum": 5.0
+															}
+														}
+													}]
+												}
+											}]
+										}
+									}]
+								}
+							}
+						}]
+					}
+				}
+			}, {
+				"key_as_string": "2013-04-01",
+				"key": 1364774400000,
+				"doc_count": 29,
+				"object": {
+					"doc_count": 147,
+					"objectType": {
+						"doc_count_error_upper_bound": 0,
+						"sum_other_doc_count": 0,
+						"buckets": [{
+							"key": "Basura - OSPAR",
+							"doc_count": 74,
+							"objectClassification": {
+								"doc_count": 58,
+								"level": {
+									"doc_count_error_upper_bound": 0,
+									"sum_other_doc_count": 0,
+									"buckets": [{
+										"key": 3,
+										"doc_count": 29,
+										"objectClassificationPath": {
+											"doc_count_error_upper_bound": 0,
+											"sum_other_doc_count": 0,
+											"buckets": [{
+												"key": "root.8.9.122",
+												"doc_count": 13,
+												"objectClassificationName": {
+													"doc_count_error_upper_bound": 0,
+													"sum_other_doc_count": 0,
+													"buckets": [{
+														"key": "PLÁSTICO/ POLIESTIRENO",
+														"doc_count": 13,
+														"stats": {
+															"doc_count": 13,
+															"value": {
+																"count": 13,
+																"min": 1,
+																"max": 22,
+																"avg": 6.076923076923077,
+																"sum": 79.0
+															}
+														}
+													}]
+												}
+											}]
+										}
+									}, {
+										"key": 2,
+										"doc_count": 29,
+										"objectClassificationPath": {
+											"doc_count_error_upper_bound": 0,
+											"sum_other_doc_count": 0,
+											"buckets": [{
+												"key": "root.8.9.122.15",
+												"doc_count": 1,
+												"objectClassificationName": {
+													"doc_count_error_upper_bound": 0,
+													"sum_other_doc_count": 0,
+													"buckets": [{
+														"key": "Tapas y Tapones",
+														"doc_count": 1,
+														"stats": {
+															"doc_count": 1,
+															"value": {
+																"count": 1,
+																"min": 7,
+																"max": 7,
+																"avg": 7,
+																"sum": 7.0
+															}
+														}
+													}]
+												}
+											}, {
+												"key": "root.8.9.122.2",
+												"doc_count": 1,
+												"objectClassificationName": {
+													"doc_count_error_upper_bound": 0,
+													"sum_other_doc_count": 0,
+													"buckets": [{
+														"key": "Bolsas de la compra",
+														"doc_count": 1,
+														"stats": {
+															"doc_count": 1,
+															"value": {
+																"count": 1,
+																"min": 2,
+																"max": 2,
+																"avg": 2,
+																"sum": 2.0
+															}
+														}
+													}]
+												}
+											}]
+										}
+									}]
+								}
+							}
+						}]
+					}
+				}
+			}, {
+				"key_as_string": "2013-07-01",
+				"key": 1372636800000,
+				"doc_count": 0,
+				"object": {
+					"doc_count": 147,
+					"objectType": {
+						"doc_count_error_upper_bound": 0,
+						"sum_other_doc_count": 0,
+						"buckets": [{
+							"key": "Basura - OSPAR",
+							"doc_count": 74,
+							"objectClassification": {
+								"doc_count": 0,
+								"level": {
+									"doc_count_error_upper_bound": 0,
+									"sum_other_doc_count": 0,
+									"buckets": []
+								}
+							}
+						}]
+					}
+				}
+			}, {
+				"key_as_string": "2013-10-01",
+				"key": 1380585600000,
+				"doc_count": 28,
+				"object": {
+					"doc_count": 147,
+					"objectType": {
+						"doc_count_error_upper_bound": 0,
+						"sum_other_doc_count": 0,
+						"buckets": [{
+							"key": "Basura - OSPAR",
+							"doc_count": 74,
+							"objectClassification": {
+								"doc_count": 56,
+								"level": {
+									"doc_count_error_upper_bound": 0,
+									"sum_other_doc_count": 0,
+									"buckets": [{
+										"key": 3,
+										"doc_count": 28,
+										"objectClassificationPath": {
+											"doc_count_error_upper_bound": 0,
+											"sum_other_doc_count": 0,
+											"buckets": [{
+												"key": "root.8.9.122",
+												"doc_count": 10,
+												"objectClassificationName": {
+													"doc_count_error_upper_bound": 0,
+													"sum_other_doc_count": 0,
+													"buckets": [{
+														"key": "PLÁSTICO/ POLIESTIRENO",
+														"doc_count": 10,
+														"stats": {
+															"doc_count": 10,
+															"value": {
+																"count": 10,
+																"min": 1,
+																"max": 6,
+																"avg": 3.1,
+																"sum": 31.0
+															}
+														}
+													}]
+												}
+											}]
+										}
+									}, {
+										"key": 4,
+										"doc_count": 28,
+										"objectClassificationPath": {
+											"doc_count_error_upper_bound": 0,
+											"sum_other_doc_count": 0,
+											"buckets": [{
+												"key": "root.8.9.122.15",
+												"doc_count": 1,
+												"objectClassificationName": {
+													"doc_count_error_upper_bound": 0,
+													"sum_other_doc_count": 0,
+													"buckets": [{
+														"key": "Tapas y Tapones",
+														"doc_count": 1,
+														"stats": {
+															"doc_count": 1,
+															"value": {
+																"count": 1,
+																"min": 4,
+																"max": 4,
+																"avg": 4,
+																"sum": 4.0
+															}
+														}
+													}]
+												}
+											}, {
+												"key": "root.8.9.122.2",
+												"doc_count": 1,
+												"objectClassificationName": {
+													"doc_count_error_upper_bound": 0,
+													"sum_other_doc_count": 0,
+													"buckets": [{
+														"key": "Bolsas de la compra",
+														"doc_count": 1,
+														"stats": {
+															"doc_count": 1,
+															"value": {
+																"count": 1,
+																"min": 1,
+																"max": 1,
+																"avg": 1,
+																"sum": 1.0
+															}
+														}
+													}]
+												}
+											}]
+										}
+									}]
+								}
+							}
+						}]
+					}
+				}
+			}]
+		}
+	}
+}

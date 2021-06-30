@@ -1,0 +1,63 @@
+{
+	"classification": [{
+		"name": "Basura - OSPAR",
+		"data": [{
+			"timeInterval": "2013-01-01",
+			"categories": [{
+				"name": "PLÁSTICO/ POLIESTIRENO",
+				"value": 35,
+				"categories": [{
+					"name": "Tapas y Tapones",
+					"value": 15
+				}, {
+					"name": "Bolsas de la compra",
+					"value": 3
+				}, {
+					"name": "Juguetes",
+					"value": 2
+				}]
+			}]
+		}, {
+			"timeInterval": "2013-04-01",
+			"categories": [{
+				"name": "PLÁSTICO/ POLIESTIRENO",
+				"value": 79,
+				"categories": [{
+					"name": "Tapas y Tapones",
+					"value": 7
+				}, {
+					"name": "Bolsas de la compra",
+					"value": 2
+				}]
+			}]
+		}, {
+			"timeInterval": "2013-07-01"
+		}, {
+			"timeInterval": "2013-10-01",
+			"categories": [{
+				"name": "PLÁSTICO/ POLIESTIRENO",
+				"value": 31,
+				"categories": [{
+					"name": "Tapas y Tapones",
+					"value": 4
+				}, {
+					"name": "Bolsas de la compra",
+					"value": 1
+				}]
+			}]
+		}]
+	},{
+		"name": "Basura - Origen",
+		"data": [{
+			"timeInterval": "2013-01-01",
+			"categories": [{
+				"name": "Turismo",
+				"value": 162,
+				"categories": [{
+					"name": "Cintas portalatas",
+					"value": 5
+				}]
+			}]
+		}]
+	}]
+}

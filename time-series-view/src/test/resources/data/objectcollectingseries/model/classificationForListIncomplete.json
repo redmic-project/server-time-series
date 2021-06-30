@@ -1,0 +1,334 @@
+{
+	"took": "8",
+	"timed_out": false,
+	"_shards": {
+		"total": 5,
+		"failed": 0,
+		"successful": 5
+	},
+	"aggregations": {
+		"object": {
+			"doc_count": 93,
+			"objectType": {
+				"doc_count_error_upper_bound": 0,
+				"sum_other_doc_count": 0,
+				"buckets": [{
+					"doc_count": 93,
+					"key": "Basura - OSPAR",
+					"timeIntervals": {
+						"doc_count": 74,
+						"dateHistogram": {
+							"buckets": [{
+								"key_as_string": "2013-01-01",
+								"key": 1356998400000,
+								"doc_count": 17,
+								"value": {
+									"count": 17,
+									"min": 1,
+									"max": 15,
+									"avg": 3.3529411764705883,
+									"sum": 57.0
+								}
+							}, {
+								"key_as_string": "2013-04-01",
+								"key": 1364774400000,
+								"doc_count": 29,
+								"value": {
+									"count": 29,
+									"min": 1,
+									"max": 205,
+									"avg": 15.03448275862069,
+									"sum": 436.0
+								}
+							}, {
+								"key_as_string": "2013-07-01",
+								"key": 1372636800000,
+								"doc_count": 0,
+								"value": {
+									"count": 0,
+									"min": null,
+									"max": null,
+									"avg": null,
+									"sum": null
+								}
+							}, {
+								"key_as_string": "2013-10-01",
+								"key": 1380585600000,
+								"doc_count": 28,
+								"value": {
+									"count": 28,
+									"min": 1,
+									"max": 90,
+									"avg": 7.821428571428571,
+									"sum": 219.0
+								}
+							}]
+						}
+					},
+					"objectClassification": {
+						"doc_count": 167,
+						"level": {
+							"doc_count_error_upper_bound": 0,
+							"sum_other_doc_count": 0,
+							"buckets": [{
+								"doc_count": 93,
+								"objectClassificationPath": {
+									"doc_count_error_upper_bound": 0,
+									"sum_other_doc_count": 0,
+									"buckets": [{
+										"doc_count": 35,
+										"objectClassificationName": {
+											"doc_count_error_upper_bound": 0,
+											"sum_other_doc_count": 0,
+											"buckets": [{
+												"doc_count": 35,
+												"timeIntervals": {
+													"doc_count": 35,
+													"dateHistogram": {
+														"buckets": [{
+															"key_as_string": "2013-01-01",
+															"doc_count": 10,
+															"value": {
+																"min": 1.0,
+																"avg": 7.0,
+																"max": 35.0,
+																"count": 10,
+																"sum": 70.0
+															},
+															"key": 1356998400000
+														}, {
+															"key_as_string": "2013-04-01",
+															"doc_count": 14,
+															"value": {
+																"min": 1.0,
+																"avg": 11.285714285714286,
+																"max": 79.0,
+																"count": 14,
+																"sum": 158.0
+															},
+															"key": 1364774400000
+														}, {
+															"key_as_string": "2013-07-01",
+															"doc_count": 0,
+															"value": {
+																"min": null,
+																"avg": null,
+																"max": null,
+																"count": 0,
+																"sum": null
+															},
+															"key": 1372636800000
+														}, {
+															"key_as_string": "2013-10-01",
+															"doc_count": 11,
+															"value": {
+																"min": 1.0,
+																"avg": 5.636363636363637,
+																"max": 31.0,
+																"count": 11,
+																"sum": 62.0
+															},
+															"key": 1380585600000
+														}]
+													}
+												},
+												"key": "PLÁSTICO/ POLIESTIRENO"
+											}]
+										},
+										"key": "root.122"
+									}]
+								},
+								"key": 1
+							}, {
+								"doc_count": 74,
+								"objectClassificationPath": {
+									"doc_count_error_upper_bound": 0,
+									"sum_other_doc_count": 0,
+									"buckets": [{
+										"doc_count": 3,
+										"objectClassificationName": {
+											"doc_count_error_upper_bound": 0,
+											"sum_other_doc_count": 0,
+											"buckets": [{
+												"doc_count": 3,
+												"timeIntervals": {
+													"doc_count": 3,
+													"dateHistogram": {
+														"buckets": [{
+															"key_as_string": "2013-01-01",
+															"doc_count": 1,
+															"value": {
+																"min": 15.0,
+																"avg": 15.0,
+																"max": 15.0,
+																"count": 1,
+																"sum": 15.0
+															},
+															"key": 1356998400000
+														}, {
+															"key_as_string": "2013-04-01",
+															"doc_count": 1,
+															"value": {
+																"min": 7.0,
+																"avg": 7.0,
+																"max": 7.0,
+																"count": 1,
+																"sum": 7.0
+															},
+															"key": 1364774400000
+														}, {
+															"key_as_string": "2013-07-01",
+															"doc_count": 0,
+															"value": {
+																"min": null,
+																"avg": null,
+																"max": null,
+																"count": 0,
+																"sum": null
+															},
+															"key": 1372636800000
+														}, {
+															"key_as_string": "2013-10-01",
+															"doc_count": 1,
+															"value": {
+																"min": 4.0,
+																"avg": 4.0,
+																"max": 4.0,
+																"count": 1,
+																"sum": 4.0
+															},
+															"key": 1380585600000
+														}]
+													}
+												},
+												"key": "Tapas y Tapones"
+											}]
+										},
+										"key": "root.122.15"
+									}, {
+										"doc_count": 3,
+										"objectClassificationName": {
+											"doc_count_error_upper_bound": 0,
+											"sum_other_doc_count": 0,
+											"buckets": [{
+												"doc_count": 3,
+												"timeIntervals": {
+													"doc_count": 3,
+													"dateHistogram": {
+														"buckets": [{
+															"key_as_string": "2013-01-01",
+															"doc_count": 1,
+															"value": {
+																"min": 3.0,
+																"avg": 3.0,
+																"max": 3.0,
+																"count": 1,
+																"sum": 3.0
+															},
+															"key": 1356998400000
+														}, {
+															"key_as_string": "2013-04-01",
+															"doc_count": 1,
+															"value": {
+																"min": 2.0,
+																"avg": 2.0,
+																"max": 2.0,
+																"count": 1,
+																"sum": 2.0
+															},
+															"key": 1364774400000
+														}, {
+															"key_as_string": "2013-07-01",
+															"doc_count": 0,
+															"value": {
+																"min": null,
+																"avg": null,
+																"max": null,
+																"count": 0,
+																"sum": null
+															},
+															"key": 1372636800000
+														}, {
+															"key_as_string": "2013-10-01",
+															"doc_count": 1,
+															"value": {
+																"min": 1.0,
+																"avg": 1.0,
+																"max": 1.0,
+																"count": 1,
+																"sum": 1.0
+															},
+															"key": 1380585600000
+														}]
+													}
+												},
+												"key": "Bolsas de la compra"
+											}]
+										},
+										"key": "root.122.2"
+									}, {
+										"doc_count": 3,
+										"objectClassificationName": {
+											"doc_count_error_upper_bound": 0,
+											"sum_other_doc_count": 0,
+											"buckets": [{
+												"doc_count": 3,
+												"timeIntervals": {
+													"doc_count": 3,
+													"dateHistogram": {
+														"buckets": [{
+															"key_as_string": "2013-04-01",
+															"doc_count": 1,
+															"value": {
+																"min": 7.0,
+																"avg": 7.0,
+																"max": 7.0,
+																"count": 1,
+																"sum": 7.0
+															},
+															"key": 1364774400000
+														}, {
+															"key_as_string": "2013-07-01",
+															"doc_count": 0,
+															"value": {
+																"min": null,
+																"avg": null,
+																"max": null,
+																"count": 0,
+																"sum": null
+															},
+															"key": 1372636800000
+														}, {
+															"key_as_string": "2013-10-01",
+															"doc_count": 1,
+															"value": {
+																"min": 1.0,
+																"avg": 1.0,
+																"max": 1.0,
+																"count": 1,
+																"sum": 1.0
+															},
+															"key": 1380585600000
+														}]
+													}
+												},
+												"key": "Vasos, Tazas, Copas"
+											}]
+										},
+										"key": "root.122.21"
+									}]
+								},
+								"key": 2
+							}]
+						}
+					}
+				}]
+			}
+		}
+	},
+	"hits": {
+		"total": 93,
+		"max_score": 0.0,
+		"hits": []
+	}
+}
