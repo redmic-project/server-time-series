@@ -43,7 +43,9 @@ public abstract class DataHistogramESMapper {
 			return data;
 
 		Map<String, Object> dateHistogram = (Map<String, Object>) aggregations.get("date_histogram#dateHistogram");
-		if (dateHistogram == null || dateHistogram.size() == 0)
+		if (dateHistogram == null)
+			dateHistogram = (Map<String, Object>) aggregations.get("dateHistogram");
+		if ( dateHistogram == null || dateHistogram.size() == 0)
 			return data;
 
 		List<Map<String, Object>> hits = (List<Map<String, Object>>) dateHistogram.get("buckets");
@@ -64,7 +66,13 @@ public abstract class DataHistogramESMapper {
 	private DataHistogramItemDTO map(Map<String, Object> source) {
 		DataHistogramItemDTO item = new DataHistogramItemDTO();
 		item.setKey_as_string((String) source.get("key_as_string"));
-		item.setValue(getDataHistogramStats((LinkedHashMap<String, Object>) source.get("stats#value")));
+
+		LinkedHashMap<String, Object> value = (LinkedHashMap<String, Object>) source.get("stats#value");
+
+		if (value == null)
+			value = (LinkedHashMap<String, Object>) source.get("value");
+
+		item.setValue(getDataHistogramStats(value));
 		return item;
 	}
 
