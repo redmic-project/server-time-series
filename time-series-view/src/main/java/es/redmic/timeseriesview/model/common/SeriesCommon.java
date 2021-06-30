@@ -28,6 +28,14 @@ public abstract class SeriesCommon extends BaseTimeDataAbstractES {
 
 	private String activityId;
 
+	private double value;
+
+	private Long dataDefinition;
+
+	private Double z;
+
+	private Double deviation;
+
 	private Character qFlag = '0';
 
 	private Character vFlag = 'U';
@@ -40,6 +48,38 @@ public abstract class SeriesCommon extends BaseTimeDataAbstractES {
 
 	public void setActivityId(String activityId) {
 		this.activityId = activityId;
+	}
+
+	public double getValue() {
+		return this.value;
+	}
+
+	public void setValue(double value) {
+		this.value = value;
+	}
+
+	public Long getDataDefinition() {
+		return dataDefinition;
+	}
+
+	public void setDataDefinition(Long dataDefinition) {
+		this.dataDefinition = dataDefinition;
+	}
+
+	public Double getZ() {
+		return z;
+	}
+
+	public void setZ(Double z) {
+		this.z = z;
+	}
+
+	public Double getDeviation() {
+		return deviation;
+	}
+
+	public void setDeviation(Double deviation) {
+		this.deviation = deviation;
 	}
 
 	@JsonProperty(value = "qFlag")
