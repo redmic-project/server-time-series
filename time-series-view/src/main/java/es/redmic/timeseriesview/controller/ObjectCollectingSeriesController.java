@@ -24,6 +24,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.redmic.exception.databinding.DTONotValidException;
+import es.redmic.models.es.common.dto.ElasticSearchDTO;
 import es.redmic.models.es.common.dto.SuperDTO;
 import es.redmic.models.es.common.query.dto.AggsPropertiesDTO;
 import es.redmic.models.es.common.query.dto.DataQueryDTO;
@@ -95,5 +97,14 @@ public class ObjectCollectingSeriesController extends RSeriesController<ObjectCo
 			throw new DTONotValidException(bindingResult);
 
 		return service.findTemporalDataStatistics(queryDTO);
+	}
+
+
+	@GetMapping(value = { "${controller.mapping.OBJECT_CLASSIFICATION_LIST_SCHEMA}",
+		"${controller.mapping.OBJECT_CLASSIFICATION_SCHEMA}" })
+	@ResponseBody
+	public ElasticSearchDTO getAdditionalFilterSchema() {
+
+		return new ElasticSearchDTO(service.getFilterSchema(fieldsExcludedOnQuery), 1);
 	}
 }
