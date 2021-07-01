@@ -115,21 +115,21 @@ public abstract class ObjectCollectingSeriesESMapper extends SeriesESMapper<Obje
 			classification.setName(classificationType.get(i).get("key").toString());
 			/** Obtiene las estadisticas a nivel de tipo de classificación **/
 			List<Map<String, Object>> timeIntervals = ElasticSearchUtils
-					.getBucketsFromAggregations((Map<String, Object>) classificationType.get(i).get("timeIntervals"));
+					.getBucketsFromAggregations((Map<String, Object>) classificationType.get(i).get("reverse_nested#timeIntervals"));
 			for (int timeIntervalsIt = 0; timeIntervalsIt < timeIntervals.size(); timeIntervalsIt++) {
 				classification.addHeader(timeIntervals.get(timeIntervalsIt).get("key_as_string").toString());
-				classification.addV(getValue((Map<String, Object>) timeIntervals.get(timeIntervalsIt).get("value")));
+				classification.addV(getValue((Map<String, Object>) timeIntervals.get(timeIntervalsIt).get("stats#value")));
 			}
 			/** Obtiene todas las clasificaciones del tipo actual **/
 			List<Map<String, Object>> levels = ElasticSearchUtils.getBucketsFromAggregations(
-					(Map<String, Object>) classificationType.get(i).get("objectClassification"));
+					(Map<String, Object>) classificationType.get(i).get("nested#objectClassification"));
 			List<ObjectClassificationForListDTO> data = new ArrayList<>();
 
 			for (int levelIt = 0; levelIt < levels.size(); levelIt++) { // niveles de clasificación
 
 				/** Obtiene cada uno de los elementos de la clasificación **/
 				List<Map<String, Object>> objects = ElasticSearchUtils.getBucketsFromAggregations(
-						(Map<String, Object>) levels.get(levelIt).get("objectClassificationPath"));
+						(Map<String, Object>) levels.get(levelIt).get("sterms#objectClassificationPath"));
 				boolean isLeave = (levelIt == levels.size() - 1);
 
 				for (int objectIt = 0; objectIt < objects.size(); objectIt++) { // objectos
@@ -140,11 +140,11 @@ public abstract class ObjectCollectingSeriesESMapper extends SeriesESMapper<Obje
 						object.setLeaves(1);
 
 					List<Map<String, Object>> type = ElasticSearchUtils.getBucketsFromAggregations(
-							(Map<String, Object>) objects.get(objectIt).get("objectClassificationName"));
+							(Map<String, Object>) objects.get(objectIt).get("sterms#objectClassificationName"));
 					object.setCategory(type.get(0).get("key").toString());
 
 					List<Map<String, Object>> timeIntervalsObject = ElasticSearchUtils
-							.getBucketsFromAggregations((Map<String, Object>) type.get(0).get("timeIntervals"));
+							.getBucketsFromAggregations((Map<String, Object>) type.get(0).get("reverse_nested#timeIntervals"));
 
 					for (int timeIntervalsIt = 0; timeIntervalsIt < timeIntervalsObject.size(); timeIntervalsIt++) {
 						// posición donde se debe insertar el dato y que depende del intervalo actual
@@ -152,7 +152,7 @@ public abstract class ObjectCollectingSeriesESMapper extends SeriesESMapper<Obje
 								.getHeaderPos(timeIntervalsObject.get(timeIntervalsIt).get("key_as_string").toString());
 
 						Map<String, Object> stats = (Map<String, Object>) timeIntervalsObject.get(timeIntervalsIt)
-								.get("value");
+								.get("stats#value");
 						object.setV(pos, getValue(stats));
 						// Setea el número de hijos si no es una hoja
 						Integer count = (Integer) stats.get("count");
@@ -185,7 +185,7 @@ public abstract class ObjectCollectingSeriesESMapper extends SeriesESMapper<Obje
 			String timeInterval = classificationIntervals.get(i).get("key_as_string").toString();
 
 			List<Map<String, Object>> types = ElasticSearchUtils
-					.getBucketsFromAggregations((Map<String, Object>) classificationIntervals.get(i).get("object"));
+					.getBucketsFromAggregations((Map<String, Object>) classificationIntervals.get(i).get("nested#object"));
 
 			for (int typesIt = 0; typesIt < types.size(); typesIt++) {
 
@@ -203,7 +203,7 @@ public abstract class ObjectCollectingSeriesESMapper extends SeriesESMapper<Obje
 
 				/** Obtiene todas las clasificaciones para recorrerlas por niveles **/
 				List<Map<String, Object>> levels = ElasticSearchUtils.getBucketsFromAggregations(
-						(Map<String, Object>) types.get(typesIt).get("objectClassification"));
+						(Map<String, Object>) types.get(typesIt).get("nested#objectClassification"));
 
 				for (int levelIt = 0; levelIt < levels.size(); levelIt++) {
 
@@ -211,19 +211,19 @@ public abstract class ObjectCollectingSeriesESMapper extends SeriesESMapper<Obje
 					 * Obtiene cada uno de los elementos de la clasificación
 					 **/
 					List<Map<String, Object>> objects = ElasticSearchUtils.getBucketsFromAggregations(
-							(Map<String, Object>) levels.get(levelIt).get("objectClassificationPath"));
+							(Map<String, Object>) levels.get(levelIt).get("sterms#objectClassificationPath"));
 
 					for (int objectIt = 0; objectIt < objects.size(); objectIt++) { // objectos
 
 						List<Map<String, Object>> type = ElasticSearchUtils.getBucketsFromAggregations(
-								(Map<String, Object>) objects.get(objectIt).get("objectClassificationName"));
+								(Map<String, Object>) objects.get(objectIt).get("sterms#objectClassificationName"));
 						/**
 						 * Obtiene las estadisticas a nivel de tipo de classificación
 						 **/
-						Map<String, Object> stats = (Map<String, Object>) type.get(0).get("stats");
+						Map<String, Object> stats = (Map<String, Object>) type.get(0).get("reverse_nested#stats");
 
 						interval.addCategory(objects.get(objectIt).get("key").toString(),
-								type.get(0).get("key").toString(), getValue((Map<String, Object>) stats.get("value")));
+								type.get(0).get("key").toString(), getValue((Map<String, Object>) stats.get("stats#value")));
 					}
 				}
 				data.add(interval);

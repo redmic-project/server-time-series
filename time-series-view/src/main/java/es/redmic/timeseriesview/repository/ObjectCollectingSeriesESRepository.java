@@ -47,6 +47,7 @@ import es.redmic.timeseriesview.model.objectcollectingseries.ObjectCollectingSer
 public class ObjectCollectingSeriesESRepository extends RWSeriesESRepository<ObjectCollectingSeries, DataQueryDTO> {
 
 	private static final String objectNestedPath = "object";
+	private static final String activityField = "activityId";
 
 	private static int aggsSize = 200;
 
@@ -99,7 +100,7 @@ public class ObjectCollectingSeriesESRepository extends RWSeriesESRepository<Obj
 						: DateHistogramInterval.QUARTER)
 								.subAggregation(AggregationBuilders.stats(defaultField).field(defaultField));
 
-		return AggregationBuilders.nested("object", "object")
+		return AggregationBuilders.nested(objectNestedPath, objectNestedPath)
 				.subAggregation(AggregationBuilders.terms("objectType").field("object.name")
 						.subAggregation(
 								AggregationBuilders.reverseNested("timeIntervals").subAggregation(dateHistogramBuilder))
@@ -123,7 +124,7 @@ public class ObjectCollectingSeriesESRepository extends RWSeriesESRepository<Obj
 		return getDateHistogramAggregation(
 			elasticQueryDTO.getInterval() != null ? SeriesQueryUtils.getInterval(elasticQueryDTO.getInterval())
 				: DateHistogramInterval.QUARTER)
-					.subAggregation(AggregationBuilders.nested("object", "object")
+					.subAggregation(AggregationBuilders.nested(objectNestedPath, objectNestedPath)
 						.subAggregation(AggregationBuilders.terms("objectType").field("object.name")
 							.subAggregation(AggregationBuilders.nested("objectClassification", "object.classification")
 								.subAggregation(AggregationBuilders
@@ -153,13 +154,14 @@ public class ObjectCollectingSeriesESRepository extends RWSeriesESRepository<Obj
 	@Override
 	protected QueryBuilder getTermQuery(Map<String, Object> terms, BoolQueryBuilder query) {
 
-		if (terms != null && terms.containsKey("grandparentId")) {
+		// Se mantiene grandparentId por retrocompatibilidad
+		if (terms != null && (terms.containsKey("grandparentId") || terms.containsKey(activityField))) {
 			String activityId = (String) terms.get("grandparentId");
 
-			query.must(QueryBuilders.boolQuery().filter(QueryBuilders.termQuery("activityId", activityId)));
+			query.must(QueryBuilders.boolQuery().filter(QueryBuilders.termQuery(activityField, activityId)));
 
 		} else {
-			throw new ESTermQueryException("activityId", "null");
+			throw new ESTermQueryException(activityField, "null");
 		}
 
 		return query;

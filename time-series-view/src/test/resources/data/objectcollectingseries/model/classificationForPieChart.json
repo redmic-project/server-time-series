@@ -17,7 +17,7 @@
 				"key_as_string": "2013-01-01",
 				"key": 1356998400000,
 				"doc_count": 17,
-				"object": {
+				"nested#object": {
 					"doc_count": 147,
 					"objectType": {
 						"doc_count_error_upper_bound": 0,
@@ -25,7 +25,7 @@
 						"buckets": [{
 							"key": "Basura - OSPAR",
 							"doc_count": 74,
-							"objectClassification": {
+							"nested#objectClassification": {
 								"doc_count": 34,
 								"level": {
 									"doc_count_error_upper_bound": 0,
@@ -33,21 +33,21 @@
 									"buckets": [{
 										"key": 3,
 										"doc_count": 17,
-										"objectClassificationPath": {
+										"sterms#objectClassificationPath": {
 											"doc_count_error_upper_bound": 0,
 											"sum_other_doc_count": 0,
 											"buckets": [{
 												"key": "root.8.9.122",
 												"doc_count": 9,
-												"objectClassificationName": {
+												"sterms#objectClassificationName": {
 													"doc_count_error_upper_bound": 0,
 													"sum_other_doc_count": 0,
 													"buckets": [{
 														"key": "PLÁSTICO/ POLIESTIRENO",
 														"doc_count": 9,
-														"stats": {
+														"reverse_nested#stats": {
 															"doc_count": 9,
-															"value": {
+															"stats#value": {
 																"count": 9,
 																"min": 1,
 																"max": 15,
@@ -62,21 +62,21 @@
 									}, {
 										"key": 4,
 										"doc_count": 17,
-										"objectClassificationPath": {
+										"sterms#objectClassificationPath": {
 											"doc_count_error_upper_bound": 0,
 											"sum_other_doc_count": 0,
 											"buckets": [{
 												"key": "root.8.9.122.15",
 												"doc_count": 1,
-												"objectClassificationName": {
+												"sterms#objectClassificationName": {
 													"doc_count_error_upper_bound": 0,
 													"sum_other_doc_count": 0,
 													"buckets": [{
 														"key": "Tapas y Tapones",
 														"doc_count": 1,
-														"stats": {
+														"reverse_nested#stats": {
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"count": 1,
 																"min": 15,
 																"max": 15,
@@ -89,15 +89,15 @@
 											}, {
 												"key": "root.8.9.122.2",
 												"doc_count": 1,
-												"objectClassificationName": {
+												"sterms#objectClassificationName": {
 													"doc_count_error_upper_bound": 0,
 													"sum_other_doc_count": 0,
 													"buckets": [{
 														"key": "Bolsas de la compra",
 														"doc_count": 1,
-														"stats": {
+														"reverse_nested#stats": {
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"count": 1,
 																"min": 3,
 																"max": 3,
@@ -110,15 +110,15 @@
 											}, {
 												"key": "root.8.9.122.20",
 												"doc_count": 1,
-												"objectClassificationName": {
+												"sterms#objectClassificationName": {
 													"doc_count_error_upper_bound": 0,
 													"sum_other_doc_count": 0,
 													"buckets": [{
 														"key": "Juguetes",
 														"doc_count": 1,
-														"stats": {
+														"reverse_nested#stats": {
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"count": 1,
 																"min": 2,
 																"max": 2,
@@ -136,7 +136,7 @@
 						}, {
 							"key": "Basura - Origen",
 							"doc_count": 112,
-							"objectClassification": {
+							"nested#objectClassification": {
 								"doc_count": 448,
 								"level": {
 									"doc_count_error_upper_bound": 0,
@@ -144,21 +144,21 @@
 									"buckets": [{
 										"key": 3,
 										"doc_count": 112,
-										"objectClassificationPath": {
+										"sterms#objectClassificationPath": {
 											"doc_count_error_upper_bound": 0,
 											"sum_other_doc_count": 0,
 											"buckets": [{
 												"key": "root.8.10.25",
 												"doc_count": 31,
-												"objectClassificationName": {
+												"sterms#objectClassificationName": {
 													"doc_count_error_upper_bound": 0,
 													"sum_other_doc_count": 0,
 													"buckets": [{
 														"key": "Turismo",
 														"doc_count": 31,
-														"stats": {
+														"reverse_nested#stats": {
 															"doc_count": 31,
-															"value": {
+															"stats#value": {
 																"count": 31,
 																"min": 0,
 																"max": 9,
@@ -173,21 +173,21 @@
 									}, {
 										"key": 4,
 										"doc_count": 112,
-										"objectClassificationPath": {
+										"sterms#objectClassificationPath": {
 											"doc_count_error_upper_bound": 0,
 											"sum_other_doc_count": 0,
 											"buckets": [{
 												"key": "root.8.10.25.239",
 												"doc_count": 1,
-												"objectClassificationName": {
+												"sterms#objectClassificationName": {
 													"doc_count_error_upper_bound": 0,
 													"sum_other_doc_count": 0,
 													"buckets": [{
 														"key": "Cintas portalatas",
 														"doc_count": 1,
-														"stats": {
+														"reverse_nested#stats": {
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"count": 1,
 																"min": 5,
 																"max": 5,
@@ -209,7 +209,7 @@
 				"key_as_string": "2013-04-01",
 				"key": 1364774400000,
 				"doc_count": 29,
-				"object": {
+				"nested#object": {
 					"doc_count": 147,
 					"objectType": {
 						"doc_count_error_upper_bound": 0,
@@ -217,7 +217,7 @@
 						"buckets": [{
 							"key": "Basura - OSPAR",
 							"doc_count": 74,
-							"objectClassification": {
+							"nested#objectClassification": {
 								"doc_count": 58,
 								"level": {
 									"doc_count_error_upper_bound": 0,
@@ -225,21 +225,21 @@
 									"buckets": [{
 										"key": 3,
 										"doc_count": 29,
-										"objectClassificationPath": {
+										"sterms#objectClassificationPath": {
 											"doc_count_error_upper_bound": 0,
 											"sum_other_doc_count": 0,
 											"buckets": [{
 												"key": "root.8.9.122",
 												"doc_count": 13,
-												"objectClassificationName": {
+												"sterms#objectClassificationName": {
 													"doc_count_error_upper_bound": 0,
 													"sum_other_doc_count": 0,
 													"buckets": [{
 														"key": "PLÁSTICO/ POLIESTIRENO",
 														"doc_count": 13,
-														"stats": {
+														"reverse_nested#stats": {
 															"doc_count": 13,
-															"value": {
+															"stats#value": {
 																"count": 13,
 																"min": 1,
 																"max": 22,
@@ -254,21 +254,21 @@
 									}, {
 										"key": 2,
 										"doc_count": 29,
-										"objectClassificationPath": {
+										"sterms#objectClassificationPath": {
 											"doc_count_error_upper_bound": 0,
 											"sum_other_doc_count": 0,
 											"buckets": [{
 												"key": "root.8.9.122.15",
 												"doc_count": 1,
-												"objectClassificationName": {
+												"sterms#objectClassificationName": {
 													"doc_count_error_upper_bound": 0,
 													"sum_other_doc_count": 0,
 													"buckets": [{
 														"key": "Tapas y Tapones",
 														"doc_count": 1,
-														"stats": {
+														"reverse_nested#stats": {
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"count": 1,
 																"min": 7,
 																"max": 7,
@@ -281,15 +281,15 @@
 											}, {
 												"key": "root.8.9.122.2",
 												"doc_count": 1,
-												"objectClassificationName": {
+												"sterms#objectClassificationName": {
 													"doc_count_error_upper_bound": 0,
 													"sum_other_doc_count": 0,
 													"buckets": [{
 														"key": "Bolsas de la compra",
 														"doc_count": 1,
-														"stats": {
+														"reverse_nested#stats": {
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"count": 1,
 																"min": 2,
 																"max": 2,
@@ -311,7 +311,7 @@
 				"key_as_string": "2013-07-01",
 				"key": 1372636800000,
 				"doc_count": 0,
-				"object": {
+				"nested#object": {
 					"doc_count": 147,
 					"objectType": {
 						"doc_count_error_upper_bound": 0,
@@ -319,7 +319,7 @@
 						"buckets": [{
 							"key": "Basura - OSPAR",
 							"doc_count": 74,
-							"objectClassification": {
+							"nested#objectClassification": {
 								"doc_count": 0,
 								"level": {
 									"doc_count_error_upper_bound": 0,
@@ -334,7 +334,7 @@
 				"key_as_string": "2013-10-01",
 				"key": 1380585600000,
 				"doc_count": 28,
-				"object": {
+				"nested#object": {
 					"doc_count": 147,
 					"objectType": {
 						"doc_count_error_upper_bound": 0,
@@ -342,7 +342,7 @@
 						"buckets": [{
 							"key": "Basura - OSPAR",
 							"doc_count": 74,
-							"objectClassification": {
+							"nested#objectClassification": {
 								"doc_count": 56,
 								"level": {
 									"doc_count_error_upper_bound": 0,
@@ -350,21 +350,21 @@
 									"buckets": [{
 										"key": 3,
 										"doc_count": 28,
-										"objectClassificationPath": {
+										"sterms#objectClassificationPath": {
 											"doc_count_error_upper_bound": 0,
 											"sum_other_doc_count": 0,
 											"buckets": [{
 												"key": "root.8.9.122",
 												"doc_count": 10,
-												"objectClassificationName": {
+												"sterms#objectClassificationName": {
 													"doc_count_error_upper_bound": 0,
 													"sum_other_doc_count": 0,
 													"buckets": [{
 														"key": "PLÁSTICO/ POLIESTIRENO",
 														"doc_count": 10,
-														"stats": {
+														"reverse_nested#stats": {
 															"doc_count": 10,
-															"value": {
+															"stats#value": {
 																"count": 10,
 																"min": 1,
 																"max": 6,
@@ -379,21 +379,21 @@
 									}, {
 										"key": 4,
 										"doc_count": 28,
-										"objectClassificationPath": {
+										"sterms#objectClassificationPath": {
 											"doc_count_error_upper_bound": 0,
 											"sum_other_doc_count": 0,
 											"buckets": [{
 												"key": "root.8.9.122.15",
 												"doc_count": 1,
-												"objectClassificationName": {
+												"sterms#objectClassificationName": {
 													"doc_count_error_upper_bound": 0,
 													"sum_other_doc_count": 0,
 													"buckets": [{
 														"key": "Tapas y Tapones",
 														"doc_count": 1,
-														"stats": {
+														"reverse_nested#stats": {
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"count": 1,
 																"min": 4,
 																"max": 4,
@@ -406,15 +406,15 @@
 											}, {
 												"key": "root.8.9.122.2",
 												"doc_count": 1,
-												"objectClassificationName": {
+												"sterms#objectClassificationName": {
 													"doc_count_error_upper_bound": 0,
 													"sum_other_doc_count": 0,
 													"buckets": [{
 														"key": "Bolsas de la compra",
 														"doc_count": 1,
-														"stats": {
+														"reverse_nested#stats": {
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"count": 1,
 																"min": 1,
 																"max": 1,

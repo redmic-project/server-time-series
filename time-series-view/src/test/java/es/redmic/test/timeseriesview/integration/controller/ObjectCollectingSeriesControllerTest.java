@@ -21,6 +21,7 @@ package es.redmic.test.timeseriesview.integration.controller;
  */
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -53,6 +54,8 @@ import org.springframework.web.context.WebApplicationContext;
 import es.redmic.models.es.common.query.dto.DataQueryDTO;
 import es.redmic.test.timeseriesview.integration.common.controller.SeriesControllerBaseTest;
 import es.redmic.timeseriesview.TimeSeriesViewApplication;
+import es.redmic.timeseriesview.model.objectcollectingseries.ObjectCollectingSeries;
+import es.redmic.timeseriesview.repository.ObjectCollectingSeriesESRepository;
 
 @SpringBootTest(classes = { TimeSeriesViewApplication.class })
 @ActiveProfiles("test")
@@ -65,6 +68,9 @@ public class ObjectCollectingSeriesControllerTest extends SeriesControllerBaseTe
 	@Autowired
 	protected FilterChainProxy springSecurityFilterChain;
 
+	@Autowired
+	ObjectCollectingSeriesESRepository repository;
+
 	protected MockMvc mockMvc;
 
 	@Value("${controller.mapping.OBJECTCOLLECTING}")
@@ -76,6 +82,11 @@ public class ObjectCollectingSeriesControllerTest extends SeriesControllerBaseTe
 	@Value("${controller.mapping.OBJECT_CLASSIFICATION_LIST}")
 	private String OBJECT_CLASSIFICATION_LIST;
 
+	@Value("${controller.mapping.OBJECT_CLASSIFICATION}")
+	private String OBJECT_CLASSIFICATION;
+
+	DataQueryDTO dataQuery;
+
 	@BeforeClass
 	public static void beforeClass() {
 	}
@@ -85,12 +96,26 @@ public class ObjectCollectingSeriesControllerTest extends SeriesControllerBaseTe
 
 		mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).addFilters(springSecurityFilterChain)
 				.build();
+
+		String modelPath = "/data/objectcollectingseries/model/objectCollectingSeriesModel.json";
+
+		ObjectCollectingSeries objectCollectingSeries = mapper.readValue(getClass().getResource(modelPath).openStream(),
+			ObjectCollectingSeries.class);
+
+		repository.save(objectCollectingSeries);
+
+		dataQuery = new DataQueryDTO();
+		Map<String, Object> terms = new HashMap<>();
+		terms.put("parentId", "sdsd323sdds_3ed");
+		terms.put("grandparentId", "3");
+		dataQuery.setTerms(terms);
+
+		dataQuery.setInterval("1q");
 	}
 
 	@After
 	public void restore() {
 	}
-
 
 	@Test
 	public void getObjectClassificationListSchema_Return200_WhenSchemaIsFound() throws Exception {
@@ -112,28 +137,44 @@ public class ObjectCollectingSeriesControllerTest extends SeriesControllerBaseTe
 	@Test
 	public void getObjectClassificationList_Return200_IfQueryIsOK() throws Exception {
 
-		String searchSchema = "/data/objectcollectingseries/schema/searchSchema.json";
-
-		DataQueryDTO dataQuery = new DataQueryDTO();
-		Map<String, Object> terms = new HashMap<>();
-		terms.put("parentId", "6f49792c-b2b2-4875-8f00-9729b24b0e1b");
-		terms.put("grandparentId", "1193");
-		dataQuery.setTerms(terms);
-
-		dataQuery.setInterval("1q");
-
 		// @formatter:off
 
-		MvcResult result = this.mockMvc
+		this.mockMvc
 			.perform(post(OBJECTCOLLECTINGSERIES_BASE_PATH + OBJECT_CLASSIFICATION_LIST + "/_search")
 				.content(getQueryAsString(dataQuery))
 				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().is(200))
-			.andExpect(jsonPath("$.success", is(true))).andReturn();
+			.andExpect(jsonPath("$.success", is(true)))
+			.andExpect(jsonPath("$.body", notNullValue()))
+			.andExpect(jsonPath("$.body.length()", is(2)))
+			.andExpect(jsonPath("$.body[0].name", notNullValue()))
+			.andExpect(jsonPath("$.body[0].v", notNullValue()))
+			.andExpect(jsonPath("$.body[0].v.length()", is(1)))
+			.andExpect(jsonPath("$.body[0].data", notNullValue()))
+			.andExpect(jsonPath("$.body[0].data.length()", is(3)))
+			.andExpect(jsonPath("$.body[0].header", notNullValue()));
 
-		System.out.println(result.getResponse().getContentAsString());
+		// @formatter:on
+	}
 
-			//.andExpect(jsonPath("$.body", is(mapper.readValue(getClass().getResource(searchSchema).openStream(), Map.class))));
+	@Test
+	public void getObjectClassification_Return200_IfQueryIsOK() throws Exception {
+
+		// @formatter:off
+
+		this.mockMvc
+			.perform(post(OBJECTCOLLECTINGSERIES_BASE_PATH + OBJECT_CLASSIFICATION + "/_search")
+				.content(getQueryAsString(dataQuery))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().is(200))
+			.andExpect(jsonPath("$.success", is(true)))
+			.andExpect(jsonPath("$.body", notNullValue()))
+			.andExpect(jsonPath("$.body.length()", is(2)))
+			.andExpect(jsonPath("$.body[0].data", notNullValue()))
+			.andExpect(jsonPath("$.body[0].data.length()", is(1)))
+			.andExpect(jsonPath("$.body[0].data[0].categories", notNullValue()))
+			.andExpect(jsonPath("$.body[0].data[0].timeInterval", notNullValue()));
+
 
 		// @formatter:on
 	}

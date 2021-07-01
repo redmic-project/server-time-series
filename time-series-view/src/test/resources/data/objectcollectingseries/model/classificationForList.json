@@ -15,14 +15,14 @@
 				"buckets": [{
 					"doc_count": 93,
 					"key": "Basura - OSPAR",
-					"timeIntervals": {
+					"reverse_nested#timeIntervals": {
 						"doc_count": 74,
 						"dateHistogram": {
 							"buckets": [{
 								"key_as_string": "2013-01-01",
 								"key": 1356998400000,
 								"doc_count": 17,
-								"value": {
+								"stats#value": {
 									"count": 17,
 									"min": 1,
 									"max": 15,
@@ -33,7 +33,7 @@
 								"key_as_string": "2013-04-01",
 								"key": 1364774400000,
 								"doc_count": 29,
-								"value": {
+								"stats#value": {
 									"count": 29,
 									"min": 1,
 									"max": 205,
@@ -44,7 +44,7 @@
 								"key_as_string": "2013-07-01",
 								"key": 1372636800000,
 								"doc_count": 0,
-								"value": {
+								"stats#value": {
 									"count": 0,
 									"min": null,
 									"max": null,
@@ -55,7 +55,7 @@
 								"key_as_string": "2013-10-01",
 								"key": 1380585600000,
 								"doc_count": 28,
-								"value": {
+								"stats#value": {
 									"count": 28,
 									"min": 1,
 									"max": 90,
@@ -65,30 +65,30 @@
 							}]
 						}
 					},
-					"objectClassification": {
+					"nested#objectClassification": {
 						"doc_count": 167,
 						"level": {
 							"doc_count_error_upper_bound": 0,
 							"sum_other_doc_count": 0,
 							"buckets": [{
 								"doc_count": 93,
-								"objectClassificationPath": {
+								"sterms#objectClassificationPath": {
 									"doc_count_error_upper_bound": 0,
 									"sum_other_doc_count": 0,
 									"buckets": [{
 										"doc_count": 35,
-										"objectClassificationName": {
+										"sterms#objectClassificationName": {
 											"doc_count_error_upper_bound": 0,
 											"sum_other_doc_count": 0,
 											"buckets": [{
 												"doc_count": 35,
-												"timeIntervals": {
+												"reverse_nested#timeIntervals": {
 													"doc_count": 35,
 													"dateHistogram": {
 														"buckets": [{
 															"key_as_string": "2013-01-01",
 															"doc_count": 10,
-															"value": {
+															"stats#value": {
 																"min": 1.0,
 																"avg": 7.0,
 																"max": 35.0,
@@ -99,7 +99,7 @@
 														}, {
 															"key_as_string": "2013-04-01",
 															"doc_count": 14,
-															"value": {
+															"stats#value": {
 																"min": 1.0,
 																"avg": 11.285714285714286,
 																"max": 79.0,
@@ -110,7 +110,7 @@
 														}, {
 															"key_as_string": "2013-07-01",
 															"doc_count": 0,
-															"value": {
+															"stats#value": {
 																"min": null,
 																"avg": null,
 																"max": null,
@@ -121,7 +121,7 @@
 														}, {
 															"key_as_string": "2013-10-01",
 															"doc_count": 11,
-															"value": {
+															"stats#value": {
 																"min": 1.0,
 																"avg": 5.636363636363637,
 																"max": 31.0,
@@ -141,23 +141,23 @@
 								"key": 1
 							}, {
 								"doc_count": 74,
-								"objectClassificationPath": {
+								"sterms#objectClassificationPath": {
 									"doc_count_error_upper_bound": 0,
 									"sum_other_doc_count": 0,
 									"buckets": [{
 										"doc_count": 3,
-										"objectClassificationName": {
+										"sterms#objectClassificationName": {
 											"doc_count_error_upper_bound": 0,
 											"sum_other_doc_count": 0,
 											"buckets": [{
 												"doc_count": 3,
-												"timeIntervals": {
+												"reverse_nested#timeIntervals": {
 													"doc_count": 3,
 													"dateHistogram": {
 														"buckets": [{
 															"key_as_string": "2013-01-01",
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"min": 15.0,
 																"avg": 15.0,
 																"max": 15.0,
@@ -168,7 +168,7 @@
 														}, {
 															"key_as_string": "2013-04-01",
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"min": 7.0,
 																"avg": 7.0,
 																"max": 7.0,
@@ -179,7 +179,7 @@
 														}, {
 															"key_as_string": "2013-07-01",
 															"doc_count": 0,
-															"value": {
+															"stats#value": {
 																"min": null,
 																"avg": null,
 																"max": null,
@@ -190,7 +190,7 @@
 														}, {
 															"key_as_string": "2013-10-01",
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"min": 4.0,
 																"avg": 4.0,
 																"max": 4.0,
@@ -207,18 +207,18 @@
 										"key": "root.122.15"
 									}, {
 										"doc_count": 3,
-										"objectClassificationName": {
+										"sterms#objectClassificationName": {
 											"doc_count_error_upper_bound": 0,
 											"sum_other_doc_count": 0,
 											"buckets": [{
 												"doc_count": 3,
-												"timeIntervals": {
+												"reverse_nested#timeIntervals": {
 													"doc_count": 3,
 													"dateHistogram": {
 														"buckets": [{
 															"key_as_string": "2013-01-01",
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"min": 3.0,
 																"avg": 3.0,
 																"max": 3.0,
@@ -229,7 +229,7 @@
 														}, {
 															"key_as_string": "2013-04-01",
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"min": 2.0,
 																"avg": 2.0,
 																"max": 2.0,
@@ -240,7 +240,7 @@
 														}, {
 															"key_as_string": "2013-07-01",
 															"doc_count": 0,
-															"value": {
+															"stats#value": {
 																"min": null,
 																"avg": null,
 																"max": null,
@@ -251,7 +251,7 @@
 														}, {
 															"key_as_string": "2013-10-01",
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"min": 1.0,
 																"avg": 1.0,
 																"max": 1.0,
@@ -268,18 +268,18 @@
 										"key": "root.122.2"
 									}, {
 										"doc_count": 3,
-										"objectClassificationName": {
+										"sterms#objectClassificationName": {
 											"doc_count_error_upper_bound": 0,
 											"sum_other_doc_count": 0,
 											"buckets": [{
 												"doc_count": 3,
-												"timeIntervals": {
+												"reverse_nested#timeIntervals": {
 													"doc_count": 3,
 													"dateHistogram": {
 														"buckets": [{
 															"key_as_string": "2013-01-01",
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"min": 3.0,
 																"avg": 3.0,
 																"max": 3.0,
@@ -290,7 +290,7 @@
 														}, {
 															"key_as_string": "2013-04-01",
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"min": 7.0,
 																"avg": 7.0,
 																"max": 7.0,
@@ -301,7 +301,7 @@
 														}, {
 															"key_as_string": "2013-07-01",
 															"doc_count": 0,
-															"value": {
+															"stats#value": {
 																"min": null,
 																"avg": null,
 																"max": null,
@@ -312,7 +312,7 @@
 														}, {
 															"key_as_string": "2013-10-01",
 															"doc_count": 1,
-															"value": {
+															"stats#value": {
 																"min": 1.0,
 																"avg": 1.0,
 																"max": 1.0,
