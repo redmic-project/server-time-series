@@ -21,19 +21,18 @@ package es.redmic.test.timeseriesview.integration.controller;
  */
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -51,22 +50,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import es.redmic.models.es.common.query.dto.DataQueryDTO;
-import es.redmic.models.es.common.query.dto.DateLimitsDTO;
+import es.redmic.test.timeseriesview.integration.common.controller.SeriesControllerBaseTest;
 import es.redmic.timeseriesview.TimeSeriesViewApplication;
-import es.redmic.timeseriesview.model.timeseries.TimeSeries;
-import es.redmic.timeseriesview.repository.TimeSeriesESRepository;
 
 @SpringBootTest(classes = { TimeSeriesViewApplication.class })
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class ObjectCollectingSeriesControllerTest {
+public class ObjectCollectingSeriesControllerTest extends SeriesControllerBaseTest {
 
 	@Autowired
 	protected WebApplicationContext webApplicationContext;
@@ -76,15 +67,14 @@ public class ObjectCollectingSeriesControllerTest {
 
 	protected MockMvc mockMvc;
 
-	@Autowired
-	ObjectMapper mapper;
-
-
 	@Value("${controller.mapping.OBJECTCOLLECTING}")
 	private String OBJECTCOLLECTINGSERIES_BASE_PATH;
 
 	@Value("${controller.mapping.OBJECT_CLASSIFICATION_LIST_SCHEMA}")
 	private String OBJECT_CLASSIFICATION_LIST_SCHEMA;
+
+	@Value("${controller.mapping.OBJECT_CLASSIFICATION_LIST}")
+	private String OBJECT_CLASSIFICATION_LIST;
 
 	@BeforeClass
 	public static void beforeClass() {
@@ -115,6 +105,35 @@ public class ObjectCollectingSeriesControllerTest {
 			.andExpect(status().is(200))
 			.andExpect(jsonPath("$.success", is(true)))
 			.andExpect(jsonPath("$.body", is(mapper.readValue(getClass().getResource(searchSchema).openStream(), Map.class))));
+
+		// @formatter:on
+	}
+
+	@Test
+	public void getObjectClassificationList_Return200_IfQueryIsOK() throws Exception {
+
+		String searchSchema = "/data/objectcollectingseries/schema/searchSchema.json";
+
+		DataQueryDTO dataQuery = new DataQueryDTO();
+		Map<String, Object> terms = new HashMap<>();
+		terms.put("parentId", "6f49792c-b2b2-4875-8f00-9729b24b0e1b");
+		terms.put("grandparentId", "1193");
+		dataQuery.setTerms(terms);
+
+		dataQuery.setInterval("1q");
+
+		// @formatter:off
+
+		MvcResult result = this.mockMvc
+			.perform(post(OBJECTCOLLECTINGSERIES_BASE_PATH + OBJECT_CLASSIFICATION_LIST + "/_search")
+				.content(getQueryAsString(dataQuery))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().is(200))
+			.andExpect(jsonPath("$.success", is(true))).andReturn();
+
+		System.out.println(result.getResponse().getContentAsString());
+
+			//.andExpect(jsonPath("$.body", is(mapper.readValue(getClass().getResource(searchSchema).openStream(), Map.class))));
 
 		// @formatter:on
 	}

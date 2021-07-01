@@ -56,6 +56,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.redmic.models.es.common.query.dto.DataQueryDTO;
 import es.redmic.models.es.common.query.dto.DateLimitsDTO;
+import es.redmic.test.timeseriesview.integration.common.controller.SeriesControllerBaseTest;
 import es.redmic.timeseriesview.TimeSeriesViewApplication;
 import es.redmic.timeseriesview.model.timeseries.TimeSeries;
 import es.redmic.timeseriesview.repository.TimeSeriesESRepository;
@@ -63,7 +64,7 @@ import es.redmic.timeseriesview.repository.TimeSeriesESRepository;
 @SpringBootTest(classes = { TimeSeriesViewApplication.class })
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class WindRoseControllerTest {
+public class WindRoseControllerTest extends SeriesControllerBaseTest {
 
 	@Autowired
 	protected WebApplicationContext webApplicationContext;
@@ -72,9 +73,6 @@ public class WindRoseControllerTest {
 	protected FilterChainProxy springSecurityFilterChain;
 
 	protected MockMvc mockMvc;
-
-	@Autowired
-	ObjectMapper mapper;
 
 	private String windRoseSeries = "/data/windrose/windRoseData.json";
 
