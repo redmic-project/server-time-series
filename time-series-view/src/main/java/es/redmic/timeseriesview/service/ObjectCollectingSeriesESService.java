@@ -58,10 +58,12 @@ public class ObjectCollectingSeriesESService
 		this.repository = repository;
 	}
 
-	@SuppressWarnings("unchecked")
 	public ElasticSearchDTO findClassificationList(DataQueryDTO query) {
 
 		SeriesSearchWrapper<ObjectCollectingSeries> response = repository.find(query);
+
+		if (response == null || response.getAggregations() == null)
+			return new ElasticSearchDTO(null, 0);
 
 		ClassificationsForListDTO dtoOut = Mappers.getMapper(ObjectCollectingSeriesESMapper.class)
 			.convertToList(response.getAggregations());
@@ -69,10 +71,12 @@ public class ObjectCollectingSeriesESService
 		return new ElasticSearchDTO(dtoOut.getClassification(), dtoOut.getClassification().size());
 	}
 
-	@SuppressWarnings("unchecked")
 	public ElasticSearchDTO findClassificationStatistics(DataQueryDTO query) {
 
 		SeriesSearchWrapper<ObjectCollectingSeries> response = repository.find(query);
+
+		if (response == null || response.getAggregations() == null)
+			return new ElasticSearchDTO(null, 0);
 
 		ClassificationsForPieChartDTO dtoOut = Mappers.getMapper(ObjectCollectingSeriesESMapper.class)
 			.convertToPieChart(response.getAggregations());
@@ -85,9 +89,12 @@ public class ObjectCollectingSeriesESService
 
 		SeriesSearchWrapper<ObjectCollectingSeries> response = repository.find(query);
 
-		DataHistogramDTO dtoOut = Mappers.getMapper(DataHistogramESMapper.class).map(response.getAggregations());
+		if (response == null || response.getAggregations() == null)
+			return new ElasticSearchDTO(null, 0);
 
+		DataHistogramDTO dtoOut = Mappers.getMapper(DataHistogramESMapper.class).map(response.getAggregations());
 		dtoOut.setDataDefinitionIds((List<Integer>) query.getTerms().get("dataDefinition"));
+
 		return new ElasticSearchDTO(dtoOut, dtoOut.getData().size());
 	}
 

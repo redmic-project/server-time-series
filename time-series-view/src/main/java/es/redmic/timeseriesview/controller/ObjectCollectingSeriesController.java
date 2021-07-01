@@ -57,13 +57,13 @@ public class ObjectCollectingSeriesController extends RSeriesController<ObjectCo
 	@ResponseBody
 	public SuperDTO findClassificationList(@Valid @RequestBody DataQueryDTO queryDTO, BindingResult bindingResult) {
 
+		if (bindingResult != null && bindingResult.hasErrors())
+			throw new DTONotValidException(bindingResult);
+
 		AggsPropertiesDTO agg = new AggsPropertiesDTO();
 		agg.setField("classificationList");
 		queryDTO.addAgg(agg);
 		queryDTO.setSize(0);
-
-		if (bindingResult != null && bindingResult.hasErrors())
-			throw new DTONotValidException(bindingResult);
 
 		return service.findClassificationList(queryDTO);
 	}
@@ -72,13 +72,13 @@ public class ObjectCollectingSeriesController extends RSeriesController<ObjectCo
 	@ResponseBody
 	public SuperDTO findClassification(@Valid @RequestBody DataQueryDTO queryDTO, BindingResult bindingResult) {
 
+		if (bindingResult != null && bindingResult.hasErrors())
+			throw new DTONotValidException(bindingResult);
+
 		AggsPropertiesDTO agg = new AggsPropertiesDTO();
 		agg.setField("classification");
 		queryDTO.addAgg(agg);
 		queryDTO.setSize(0);
-
-		if (bindingResult != null && bindingResult.hasErrors())
-			throw new DTONotValidException(bindingResult);
 
 		return service.findClassificationStatistics(queryDTO);
 	}
@@ -87,14 +87,13 @@ public class ObjectCollectingSeriesController extends RSeriesController<ObjectCo
 	@ResponseBody
 	public SuperDTO findTemporalData(@Valid @RequestBody DataQueryDTO queryDTO, BindingResult bindingResult) {
 
+		if (bindingResult != null && bindingResult.hasErrors())
+			throw new DTONotValidException(bindingResult);
+
 		AggsPropertiesDTO agg = new AggsPropertiesDTO();
 		agg.setField("temporaldata");
 		queryDTO.addAgg(agg);
-
 		queryDTO.setSize(0);
-
-		if (bindingResult != null && bindingResult.hasErrors())
-			throw new DTONotValidException(bindingResult);
 
 		return service.findTemporalDataStatistics(queryDTO);
 	}
