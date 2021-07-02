@@ -48,6 +48,7 @@ public class ObjectCollectingSeriesESRepository extends RWSeriesESRepository<Obj
 
 	private static final String objectNestedPath = "object";
 	private static final String activityField = "activityId";
+	private static final String grandparentIdKey = "grandparentId";
 
 	private static int aggsSize = 200;
 
@@ -154,12 +155,17 @@ public class ObjectCollectingSeriesESRepository extends RWSeriesESRepository<Obj
 	@Override
 	protected QueryBuilder getTermQuery(Map<String, Object> terms, BoolQueryBuilder query) {
 
-		// Se mantiene grandparentId por retrocompatibilidad
-		if (terms != null && (terms.containsKey("grandparentId") || terms.containsKey(activityField))) {
-			String activityId = (String) terms.get("grandparentId");
-
-			query.must(QueryBuilders.boolQuery().filter(QueryBuilders.termQuery(activityField, activityId)));
-
+		if (terms != null && !terms.isEmpty()) {
+			// Se mantiene grandparentId por retrocompatibilidad
+			// TODO: comprobar también por parentId o featureId
+			if(terms.containsKey(grandparentIdKey) || terms.containsKey(activityField)) {
+				String activityId = null;
+				if(terms.containsKey(grandparentIdKey))
+					activityId = (String) terms.get(grandparentIdKey);
+				if (terms.containsKey(activityField))
+					activityId = (String) terms.get(activityField);
+				query.must(QueryBuilders.boolQuery().filter(QueryBuilders.termQuery(activityField, activityId)));
+			}
 		} else {
 			throw new ESTermQueryException(activityField, "null");
 		}

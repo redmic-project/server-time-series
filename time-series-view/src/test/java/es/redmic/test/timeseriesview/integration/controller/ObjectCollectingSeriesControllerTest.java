@@ -28,7 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -52,6 +54,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import es.redmic.models.es.common.query.dto.DataQueryDTO;
+import es.redmic.models.es.maintenance.parameter.model.DataDefinition;
 import es.redmic.test.timeseriesview.integration.common.controller.SeriesControllerBaseTest;
 import es.redmic.timeseriesview.TimeSeriesViewApplication;
 import es.redmic.timeseriesview.model.objectcollectingseries.ObjectCollectingSeries;
@@ -84,6 +87,9 @@ public class ObjectCollectingSeriesControllerTest extends SeriesControllerBaseTe
 
 	@Value("${controller.mapping.OBJECT_CLASSIFICATION}")
 	private String OBJECT_CLASSIFICATION;
+
+	@Value("${controller.mapping.SERIES_TEMPORALDATA}")
+	private String SERIES_TEMPORALDATA;
 
 	DataQueryDTO dataQuery;
 
@@ -174,6 +180,32 @@ public class ObjectCollectingSeriesControllerTest extends SeriesControllerBaseTe
 			.andExpect(jsonPath("$.body[0].data.length()", is(1)))
 			.andExpect(jsonPath("$.body[0].data[0].categories", notNullValue()))
 			.andExpect(jsonPath("$.body[0].data[0].timeInterval", notNullValue()));
+
+
+		// @formatter:on
+	}
+
+	@Test
+	public void getObjectTemporalData_Return200_IfQueryIsOK() throws Exception {
+
+		// @formatter:off
+
+		List<Integer> dataDefinitionList = new ArrayList<>();
+		dataDefinitionList.add(12);
+		dataQuery.getTerms().put("dataDefinition", dataDefinitionList);
+
+		List<String> returnFields = new ArrayList<>();
+		returnFields.add("value");
+		returnFields.add("date");
+		dataQuery.setReturnFields(returnFields);
+
+		this.mockMvc
+			.perform(post(OBJECTCOLLECTINGSERIES_BASE_PATH + SERIES_TEMPORALDATA + "/_search")
+				.content(getQueryAsString(dataQuery))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON))
+			.andExpect(status().is(200))
+			.andExpect(jsonPath("$.success", is(true)))
+			.andExpect(jsonPath("$.body", notNullValue()));
 
 
 		// @formatter:on
