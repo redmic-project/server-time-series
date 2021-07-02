@@ -62,6 +62,9 @@
 				"activityId": {
 					"type": "keyword"
 				},
+				"featureId": {
+					"type": "keyword"
+				},
 				"date": {
 					"type": "date",
 					"format": "date_optional_time"
