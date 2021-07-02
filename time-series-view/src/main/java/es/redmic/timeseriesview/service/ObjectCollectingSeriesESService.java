@@ -1,5 +1,7 @@
 package es.redmic.timeseriesview.service;
 
+import java.util.ArrayList;
+
 /*-
  * #%L
  * Time series view
@@ -63,7 +65,7 @@ public class ObjectCollectingSeriesESService
 		SeriesSearchWrapper<ObjectCollectingSeries> response = repository.find(query);
 
 		if (response == null || response.getAggregations() == null)
-			return new ElasticSearchDTO(null, 0);
+			return new ElasticSearchDTO(new ArrayList<>(), 0);
 
 		ClassificationsForListDTO dtoOut = Mappers.getMapper(ObjectCollectingSeriesESMapper.class)
 			.convertToList(response.getAggregations());
@@ -76,7 +78,7 @@ public class ObjectCollectingSeriesESService
 		SeriesSearchWrapper<ObjectCollectingSeries> response = repository.find(query);
 
 		if (response == null || response.getAggregations() == null)
-			return new ElasticSearchDTO(null, 0);
+			return new ElasticSearchDTO(new ArrayList<>(), 0);
 
 		ClassificationsForPieChartDTO dtoOut = Mappers.getMapper(ObjectCollectingSeriesESMapper.class)
 			.convertToPieChart(response.getAggregations());
@@ -90,7 +92,7 @@ public class ObjectCollectingSeriesESService
 		SeriesSearchWrapper<ObjectCollectingSeries> response = repository.find(query);
 
 		if (response == null || response.getAggregations() == null)
-			return new ElasticSearchDTO(null, 0);
+			return new ElasticSearchDTO(new ArrayList<>(), 0);
 
 		DataHistogramDTO dtoOut = Mappers.getMapper(DataHistogramESMapper.class).map(response.getAggregations());
 		dtoOut.setDataDefinitionIds((List<Integer>) query.getTerms().get("dataDefinition"));
