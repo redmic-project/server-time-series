@@ -1,0 +1,122 @@
+{
+	"_shards": {
+		"total": 1,
+		"failed": 0,
+		"successful": 1
+	},
+	"hits": {
+		"hits": [
+			{
+				"_index": "activity",
+				"_type": "objectcollecting",
+				"_source": {
+					"id": 12931,
+					"z": -12.0,
+					"deviation": 100.0,
+					"radius": null,
+					"date": "2016-05-11T09:15:54.639+00:00",
+					"value": 2,
+					"remark": null,
+					"collectorName": null,
+					"collectionRegNo": null,
+					"qFlag": "0",
+					"vFlag": "U",
+					"confidence": {
+						"id": 4,
+						"name_en": "High",
+						"name": "Alta"
+					},
+					"localityConfidence": {
+						"id": 4,
+						"name_en": "High",
+						"name": "Alta"
+					},
+					"sample": null,
+					"elements": null,
+					"analytics": null,
+					"attributes": null,
+					"metrics": null,
+					"molecular": null,
+					"object": [{
+						"id": 1,
+						"name": "Plástico",
+						"classification": [{
+							"objectType": {
+								"id": 10,
+								"name": "pvc",
+								"name_en": "name_en",
+								"code": "xx",
+								"level": 3,
+								"path": "r.1.8.10",
+								"leaves": 0
+							}
+						},{
+							"objectType": {
+								"id": 8,
+								"name": "Plástico",
+								"name_en": "name_en",
+								"code": "xx",
+								"level": 2,
+								"path": "r.1.8",
+								"leaves": 1
+							}
+						}, {
+							"objectType": {
+								"id": 1,
+								"name": "OSPAR",
+								"name_en": "name_en",
+								"code": null,
+								"level": 1,
+								"path": "r.1",
+								"leaves": 1
+							}
+						}]
+					},{
+						"id": 2,
+						"classification": [{
+							"objectType": {
+								"id": 11,
+								"name": "pvc",
+								"name_en": "name_en",
+								"code": "xx",
+								"level": 3,
+								"path": "r.2.9.11",
+								"leaves": 0
+							}
+						},{
+							"objectType": {
+								"id": 9,
+								"name": "turismo",
+								"name_en": "name_en",
+								"code": "tx",
+								"level": 2,
+								"path": "r.2.9",
+								"leaves": 1
+							}
+						}, {
+							"objectType": {
+								"id": 2,
+								"name": "Origen de la basura",
+								"name_en": "name_en",
+								"code": null,
+								"level": 1,
+								"path": "r.2",
+								"leaves": 1
+							}
+						}]
+					}],
+					"dataDefinition": 1
+				},
+				"_id": 26534,
+				"sort": [
+					1338571800000
+				],
+				"_score": null
+			}
+		],
+		"total": 1,
+		"max_score": null
+	},
+	"took": 4,
+	"timed_out": false
+}

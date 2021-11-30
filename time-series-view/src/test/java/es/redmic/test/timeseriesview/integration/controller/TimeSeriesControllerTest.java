@@ -33,6 +33,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.After;
@@ -51,14 +55,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import es.redmic.models.es.common.query.dto.DataQueryDTO;
 import es.redmic.models.es.common.query.dto.DateLimitsDTO;
+import es.redmic.test.timeseriesview.integration.common.controller.SeriesControllerBaseTest;
 import es.redmic.timeseriesview.TimeSeriesViewApplication;
 import es.redmic.timeseriesview.model.timeseries.TimeSeries;
 import es.redmic.timeseriesview.repository.TimeSeriesESRepository;
@@ -66,7 +65,7 @@ import es.redmic.timeseriesview.repository.TimeSeriesESRepository;
 @SpringBootTest(classes = { TimeSeriesViewApplication.class })
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-public class TimeSeriesControllerTest {
+public class TimeSeriesControllerTest extends SeriesControllerBaseTest {
 
 	@Autowired
 	protected WebApplicationContext webApplicationContext;
@@ -75,9 +74,6 @@ public class TimeSeriesControllerTest {
 	protected FilterChainProxy springSecurityFilterChain;
 
 	protected MockMvc mockMvc;
-
-	@Autowired
-	ObjectMapper mapper;
 
 	private String timeSeries = "/data/timeseries/timeSeriesData.json";
 
@@ -212,15 +208,5 @@ public class TimeSeriesControllerTest {
 				.andExpect(jsonPath("$.body.schema.title", is("Data Query DTO")));
 
 		// @formatter:on
-	}
-
-	@SuppressWarnings("unchecked")
-	private String getQueryAsString(DataQueryDTO dataQuery) throws JsonProcessingException {
-
-		// Se elimina accessibilityIds ya que no está permitido para usuarios
-		// no registrados
-		HashMap<String, Object> query = mapper.convertValue(dataQuery, HashMap.class);
-		query.remove("accessibilityIds");
-		return mapper.writeValueAsString(query);
 	}
 }

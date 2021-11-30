@@ -1,0 +1,78 @@
+{
+	"classification": [{
+		"name": "Basura - OSPAR",
+		"v": [{
+			"v": 57
+		}, {
+			"v": 436
+		}, {
+			"v": 0
+		}, {
+			"v": 219
+		}],
+		"data": [{
+			"category": "PLÁSTICO/ POLIESTIRENO",
+			"path": "root.122",
+			"leaves": 14,
+			"v": [{
+				"v": 70
+			}, {
+				"v": 158
+			}, {
+				"v": 0
+			}, {
+				"v": 62
+			}]
+		}, {
+			"category": "Tapas y Tapones",
+			"path": "root.122.15",
+			"leaves": 0,
+			"v": [{
+				"v": 15
+			}, {
+				"v": 7
+			}, {
+				"v": 0
+			}, {
+				"v": 4
+			}]
+		}, {
+			"category": "Bolsas de la compra",
+			"path": "root.122.2",
+			"leaves": 0,
+			"v": [{
+				"v": 3
+			}, {
+				"v": 2
+			}, {
+				"v": 0
+			}, {
+				"v": 1
+			}]
+		}, {
+			"category": "Vasos, Tazas, Copas",
+			"path": "root.122.21",
+			"leaves": 0,
+			"v": [{
+				"v": 0
+			}, {
+				"v": 7
+			}, {
+				"v": 0
+			}, {
+				"v": 1
+			}]
+		}],
+		"header": {
+			"dates": [{
+				"label": "2013-01-01"
+			},{
+				"label": "2013-04-01"
+			},{
+				"label": "2013-07-01"
+			},{
+				"label": "2013-10-01"
+			}]
+		}
+	}]
+}

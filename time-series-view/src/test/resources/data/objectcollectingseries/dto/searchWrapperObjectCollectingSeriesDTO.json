@@ -1,0 +1,90 @@
+{
+	"total": 1,
+	"_meta": {
+		"max_score": null
+	},
+	"_aggs": {},
+	"data": [{
+		"id": "12931",
+		"z": -12.0,
+		"deviation": 100.0,
+		"date": "2016-05-11T09:15:54.639+00:00",
+		"value": 2,
+		"remark": null,
+		"qFlag": "0",
+		"vFlag": "U",
+		"confidence": {
+			"id": 4,
+			"name_en": "High",
+			"name": "Alta"
+		},
+		"object": [{
+			"id": 1,
+			"classification": [{
+				"objectType": {
+					"id": 10,
+					"name": "pvc",
+					"name_en": "name_en",
+					"code": "xx",
+					"level": 3,
+					"path": "r.1.8.10",
+					"parent": null
+				}
+			},{
+				"objectType": {
+					"id": 8,
+					"name": "Plástico",
+					"name_en": "name_en",
+					"code": "xx",
+					"level": 2,
+					"path": "r.1.8",
+					"parent": null
+				}
+			}, {
+				"objectType": {
+					"id": 1,
+					"name": "OSPAR",
+					"name_en": "name_en",
+					"code": null,
+					"level": 1,
+					"path": "r.1",
+					"parent": null
+				}
+			}]
+		},{
+			"id": 2,
+			"classification": [{
+				"objectType": {
+					"id": 11,
+					"name": "pvc",
+					"name_en": "name_en",
+					"code": "xx",
+					"level": 3,
+					"path": "r.2.9.11",
+					"parent": null
+				}
+			},{
+				"objectType": {
+					"id": 9,
+					"name": "turismo",
+					"name_en": "name_en",
+					"code": "tx",
+					"level": 2,
+					"path": "r.2.9",
+					"parent": null
+				}
+			}, {
+				"objectType": {
+					"id": 2,
+					"name": "Origen de la basura",
+					"name_en": "name_en",
+					"code": null,
+					"level": 1,
+					"path": "r.2",
+					"parent": null
+				}
+			}]
+		}],
+		"dataDefinition": 1
+	}]
+}

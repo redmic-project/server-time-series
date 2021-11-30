@@ -1,0 +1,54 @@
+{
+	"dataDefinitionIds": [],
+	"minValue": {
+		"min": 1.0,
+		"avg": 3.353,
+		"max": 15.0,
+		"count": 0.0,
+		"sum": 114.0
+	},
+	"maxValue": {
+		"min": 1.0,
+		"avg": 15.034,
+		"max": 205.0,
+		"count": 58.0,
+		"sum": 872.0
+	},
+	"data": [{
+		"date": "2013-01-01",
+		"value": {
+			"count": 34,
+			"min": 1.0,
+			"max": 15.0,
+			"avg": 3.353,
+			"sum": 114.0
+		}
+	}, {
+		"date": "2013-04-01",
+		"value": {
+			"count": 58,
+			"min": 1.0,
+			"max": 205.0,
+			"avg": 15.034,
+			"sum": 872.0
+		}
+	}, {
+		"date": "2013-07-01",
+		"value": {
+			"count": 0,
+			"min": null,
+			"max": null,
+			"avg": null,
+			"sum": null
+		}
+	}, {
+		"date": "2013-10-01",
+		"value": {
+			"count": 56,
+			"min": 1.0,
+			"max": 90.0,
+			"avg": 7.821,
+			"sum": 438.0
+		}
+	}]
+}

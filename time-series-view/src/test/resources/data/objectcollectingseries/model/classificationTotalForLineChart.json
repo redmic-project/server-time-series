@@ -1,0 +1,63 @@
+{
+	"took": 3,
+	"timed_out": false,
+	"_shards": {
+		"total": 5,
+		"successful": 5,
+		"failed": 0
+	},
+	"hits": {
+		"total": 148,
+		"max_score": 0,
+		"hits": []
+	},
+	"aggregations": {
+		"dateHistogram": {
+			"buckets": [{
+				"key_as_string": "2013-01-01",
+				"key": 1356998400000,
+				"doc_count": 34,
+				"value": {
+					"count": 34,
+					"min": 1.0,
+					"max": 15.0,
+					"avg": 3.3529411764705883,
+					"sum": 114.0
+				}
+			}, {
+				"key_as_string": "2013-04-01",
+				"key": 1364774400000,
+				"doc_count": 58,
+				"value": {
+					"count": 58,
+					"min": 1.0,
+					"max": 205.0,
+					"avg": 15.03448275862069,
+					"sum": 872.0
+				}
+			}, {
+				"key_as_string": "2013-07-01",
+				"key": 1372636800000,
+				"doc_count": 0,
+				"value": {
+					"count": 0,
+					"min": null,
+					"max": null,
+					"avg": null,
+					"sum": null
+				}
+			}, {
+				"key_as_string": "2013-10-01",
+				"key": 1380585600000,
+				"doc_count": 56,
+				"value": {
+					"count": 56,
+					"min": 1.0,
+					"max": 90.0,
+					"avg": 7.821428571428571,
+					"sum": 438.0
+				}
+			}]
+		}
+	}
+}
