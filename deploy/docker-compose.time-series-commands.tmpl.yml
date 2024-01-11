@@ -1,45 +1,51 @@
-version: '3.5'
-
 services:
   time-series-commands:
     image: ${IMAGE_NAME:-registry.gitlab.com/redmic-project/server/time-series}:${IMAGE_TAG:-latest}
     environment:
-      PORT:
-      SERVER_PORT: ${PORT}
+      MICROSERVICE_NAME: ${UNIT_NAME}-commands
+      MICROSERVICE_PORT:
+      SERVER_PORT: ${MICROSERVICE_PORT}
       OAUTH_CLIENT_ID:
       OAUTH_CLIENT_SECRET:
-      MICROSERVICE_NAME: ${UNIT_NAME}-commands
       SPRING_KAFKA_CLIENT_ID:
       JAVA_OPTS:
     networks:
-      metric-net:
-      kafka-net:
       redmic-net:
+      kafka-net:
+      metric-net:
       traefik-net:
     volumes:
       - commands-vol:/tmp/kafka
     healthcheck:
-      test: wget --spider -S -t 1 http://localhost:${PORT}/api/${UNIT_NAME}/commands/actuator/health
+      test: wget --spider -q http://localhost:${MICROSERVICE_PORT}/api/${UNIT_NAME}/commands/actuator/health
       interval: ${TIME_SERIES_COMMANDS_HEALTHCHECK_INTERVAL:-30s}
       timeout: ${TIME_SERIES_COMMANDS_HEALTHCHECK_TIMEOUT:-10s}
-      retries: ${TIME_SERIES_COMMANDS_HEALTHCHECK_RETRIES:-3}
+      retries: ${TIME_SERIES_COMMANDS_HEALTHCHECK_RETRIES:-5}
       start_period: ${TIME_SERIES_COMMANDS_HEALTHCHECK_START_PERIOD:-2m}
     deploy:
       mode: replicated
       replicas: ${TIME_SERIES_COMMANDS_REPLICAS:-1}
-      labels:
-        traefik.frontend.rule: Host:${PUBLIC_HOSTNAME};PathPrefix:/api/${UNIT_NAME}/commands
-        traefik.backend: ${UNIT_NAME}-commands
-        traefik.port: '${PORT}'
       restart_policy:
         delay: ${TIME_SERIES_COMMANDS_RESTART_DELAY:-15s}
       update_config:
         delay: ${TIME_SERIES_COMMANDS_UPDATE_DELAY:-5m}
+      labels:
+        traefik.enable: ${TRAEFIK_ENABLE}
+        traefik.http.routers.time-series-commands.entrypoints: ${TRAEFIK_ENTRYPOINT}
+        traefik.http.routers.time-series-commands.rule: (Host(`${PUBLIC_HOSTNAME}`) || Host(`${TRAEFIK_SUBDOMAIN}.${PUBLIC_HOSTNAME}`)) && PathPrefix(`/api/${UNIT_NAME}/commands`)
+        traefik.http.services.time-series-commands.loadbalancer.server.port: ${MICROSERVICE_PORT}
+      resources:
+        limits:
+          cpus: '${TIME_SERIES_COMMANDS_RESOURCES_LIMITS_CPUS:-1}'
+          memory: ${TIME_SERIES_COMMANDS_RESOURCES_LIMITS_MEMORY:-1G}
+        reservations:
+          cpus: '${TIME_SERIES_COMMANDS_RESOURCES_RESERVATIONS_CPUS:-0.001}'
+          memory: ${TIME_SERIES_COMMANDS_RESOURCES_RESERVATIONS_MEMORY:-820M}
 
 networks:
-  metric-net:
-    name: ${METRIC_NET_NAME:-metric-net}
-    driver: ${METRIC_NET_DRIVER:-overlay}
+  redmic-net:
+    name: ${REDMIC_NET_NAME:-redmic-net}
+    driver: ${REDMIC_NET_DRIVER:-overlay}
     external: true
 
   kafka-net:
@@ -47,9 +53,9 @@ networks:
     driver: ${KAFKA_NET_DRIVER:-overlay}
     external: true
 
-  redmic-net:
-    name: ${REDMIC_NET_NAME:-redmic-net}
-    driver: ${REDMIC_NET_DRIVER:-overlay}
+  metric-net:
+    name: ${METRIC_NET_NAME:-metric-net}
+    driver: ${METRIC_NET_DRIVER:-overlay}
     external: true
 
   traefik-net:

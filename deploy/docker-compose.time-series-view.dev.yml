@@ -1,15 +1,4 @@
-version: '3.5'
-
 services:
   time-series-view:
     environment:
       SPRING_PROFILES_ACTIVE: pre
-      JAVA_OPTS: -Xmx768m -Xms256m
-    deploy:
-      resources:
-        limits:
-          cpus: '${TIME_SERIES_VIEW_RESOURCES_LIMITS_CPUS:-1}'
-          memory: ${TIME_SERIES_VIEW_RESOURCES_LIMITS_MEMORY:-1G}
-        reservations:
-          cpus: '${TIME_SERIES_VIEW_RESOURCES_RESERVATIONS_CPUS:-0.001}'
-          memory: ${TIME_SERIES_VIEW_RESOURCES_RESERVATIONS_MEMORY:-820M}
