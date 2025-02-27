@@ -1,6 +1,6 @@
 services:
   time-series-commands:
-    image: ${IMAGE_NAME:-registry.gitlab.com/redmic-project/server/time-series}:${IMAGE_TAG:-latest}
+    image: ${IMAGE_NAME}:${IMAGE_TAG}
     environment:
       MICROSERVICE_NAME: ${UNIT_NAME}-commands
       MICROSERVICE_PORT:
@@ -18,17 +18,17 @@ services:
       - commands-vol:/tmp/kafka
     healthcheck:
       test: wget --spider -q http://localhost:${MICROSERVICE_PORT}/api/${UNIT_NAME}/commands/actuator/health
-      interval: ${TIME_SERIES_COMMANDS_HEALTHCHECK_INTERVAL:-30s}
-      timeout: ${TIME_SERIES_COMMANDS_HEALTHCHECK_TIMEOUT:-10s}
-      retries: ${TIME_SERIES_COMMANDS_HEALTHCHECK_RETRIES:-5}
-      start_period: ${TIME_SERIES_COMMANDS_HEALTHCHECK_START_PERIOD:-2m}
+      interval: ${HEALTHCHECK_INTERVAL:-30s}
+      timeout: ${HEALTHCHECK_TIMEOUT:-10s}
+      retries: ${HEALTHCHECK_RETRIES:-5}
+      start_period: ${HEALTHCHECK_START_PERIOD:-2m}
     deploy:
       mode: replicated
-      replicas: ${TIME_SERIES_COMMANDS_REPLICAS:-1}
+      replicas: ${REPLICAS:-1}
       restart_policy:
-        delay: ${TIME_SERIES_COMMANDS_RESTART_DELAY:-15s}
+        delay: ${RESTART_DELAY:-15s}
       update_config:
-        delay: ${TIME_SERIES_COMMANDS_UPDATE_DELAY:-5m}
+        delay: ${UPDATE_DELAY:-2m}
       labels:
         traefik.enable: ${TRAEFIK_ENABLE}
         traefik.http.routers.time-series-commands.entrypoints: ${TRAEFIK_ENTRYPOINT}
@@ -36,11 +36,11 @@ services:
         traefik.http.services.time-series-commands.loadbalancer.server.port: ${MICROSERVICE_PORT}
       resources:
         limits:
-          cpus: '${TIME_SERIES_COMMANDS_RESOURCES_LIMITS_CPUS:-1}'
-          memory: ${TIME_SERIES_COMMANDS_RESOURCES_LIMITS_MEMORY:-1G}
+          cpus: '${RESOURCES_LIMITS_CPUS:-1}'
+          memory: ${RESOURCES_LIMITS_MEMORY:-1G}
         reservations:
-          cpus: '${TIME_SERIES_COMMANDS_RESOURCES_RESERVATIONS_CPUS:-0.001}'
-          memory: ${TIME_SERIES_COMMANDS_RESOURCES_RESERVATIONS_MEMORY:-820M}
+          cpus: '${RESOURCES_RESERVATIONS_CPUS:-0.001}'
+          memory: ${RESOURCES_RESERVATIONS_MEMORY:-820M}
 
 networks:
   redmic-net:
